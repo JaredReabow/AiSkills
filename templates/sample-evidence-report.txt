@@ -1,0 +1,13 @@
+2026-09-28 09:34 demo evidence capture (report module)
+
+$ python3 -m unittest tests.test_report
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.018s
+
+OK
+
+$ python3 -c "import report; print(report.render('a b a', 2))" ; echo "exit=$?"
+a: 2
+b: 1
+exit=0

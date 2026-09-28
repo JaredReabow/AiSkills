@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "objective": {
+    "id": "obj-report-json",
+    "text": "Add a --json flag to the report tool without changing the default text output.",
+    "amendments": [
+      {
+        "id": "amd-exit-codes",
+        "text": "Also make invalid input exit with status 2.",
+        "recorded_at": "2026-09-28T02:10:00Z"
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "--json prints one machine-readable report object on stdout.",
+      "source": "objective"
+    },
+    {
+      "id": "R2",
+      "text": "The default text report keeps its existing line format.",
+      "source": "objective"
+    },
+    {
+      "id": "R3",
+      "text": "Invalid input exits with status 2.",
+      "source": "amd-exit-codes"
+    }
+  ],
+  "baseline": {
+    "workspace": ".",
+    "revision": "uncommitted-working-tree",
+    "dirty": false,
+    "notes": "Example only. Copy this file next to your ledger target and point workspace at the real project; '.' keeps this shipped example self-verifying against its own sample files."
+  },
+  "limits": {
+    "max_concurrent_workers": 4,
+    "max_total_workers": 8,
+    "review_backlog_limit": 2,
+    "budget_usd": null,
+    "notes": "No paid benchmark runs were authorised for this example."
+  },
+  "resources": [
+    {
+      "id": "res-repo",
+      "kind": "shared",
+      "description": "The shared checkout. The two modules are separate files, so this is shared rather than exclusive."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "art-cli-evidence",
+      "task_id": "T1",
+      "path": "sample-evidence.txt",
+      "sha256": "64f1d6839eb9aa225e32884e7d8e890315795651b698b6ea38f56efcbddacba0",
+      "kind": "log"
+    },
+    {
+      "id": "art-report-evidence",
+      "task_id": "T3",
+      "path": "sample-evidence-report.txt",
+      "sha256": "27a88d7adf8f2a822b86294f105c546870887ede13f1605b79ccf4dd43ba71a1",
+      "kind": "log"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "type": "implementation",
+      "objective": "Implement the --json flag and the exit-code change in the report tool.",
+      "state": "accepted",
+      "importance": "important",
+      "requirements": ["R1", "R3"],
+      "depends_on": [],
+      "owner": {
+        "actor": "worker-ds-1",
+        "model": "deepseek/deepseek-v4.1-flash"
+      },
+      "workspace": ".",
+      "baseline_revision": "uncommitted-working-tree",
+      "write_paths": ["sample-evidence.txt"],
+      "read_paths": [],
+      "resources": ["res-repo"],
+      "non_goals": ["Do not restructure the report module."],
+      "deferred_checks": [
+        "integration_check.py: needs the report module frozen first"
+      ],
+      "acceptance": [
+        {
+          "id": "A1-1",
+          "criterion": "--json emits a single JSON object.",
+          "requirement_ids": ["R1"]
+        },
+        {
+          "id": "A1-2",
+          "criterion": "Invalid input exits with status 2.",
+          "requirement_ids": ["R3"]
+        }
+      ],
+      "evidence": [
+        {
+          "id": "ev-1",
+          "acceptance": ["A1-1"],
+          "command": "python3 -m unittest tests.test_cli",
+          "exit_status": 0,
+          "status": "pass",
+          "artifact": "art-cli-evidence",
+          "notes": "Captured to the artifact file."
+        },
+        {
+          "id": "ev-2",
+          "acceptance": ["A1-2"],
+          "command": "python3 tools/check_cli.py --case invalid-input",
+          "exit_status": 0,
+          "status": "pass",
+          "artifact": null,
+          "notes": "Harness assertion; no separate artifact."
+        }
+      ],
+      "review": {
+        "reviewer_actor": "astra-1",
+        "reviewer_model": "gpt-6-astra",
+        "decision": "accept",
+        "at": "2026-09-28T03:05:00Z",
+        "independent": true,
+        "notes": "Inspected the diff against R1 and R3 and the recorded exit status.",
+        "verified_hashes": {
+          "art-cli-evidence": "64f1d6839eb9aa225e32884e7d8e890315795651b698b6ea38f56efcbddacba0"
+        }
+      }
+    },
+    {
+      "id": "T3",
+      "type": "implementation",
+      "objective": "Keep the default text report format unchanged.",
+      "state": "accepted",
+      "importance": "important",
+      "requirements": ["R2"],
+      "depends_on": [],
+      "owner": {
+        "actor": "worker-ds-2",
+        "model": "deepseek/deepseek-v4.1-flash"
+      },
+      "workspace": ".",
+      "baseline_revision": "uncommitted-working-tree",
+      "write_paths": ["sample-evidence-report.txt"],
+      "read_paths": [],
+      "resources": ["res-repo"],
+      "non_goals": ["Do not touch the CLI entry point; worker-ds-1 owns it."],
+      "acceptance": [
+        {
+          "id": "A3-1",
+          "criterion": "The text renderer keeps its existing line format.",
+          "requirement_ids": ["R2"]
+        }
+      ],
+      "evidence": [
+        {
+          "id": "ev-4",
+          "acceptance": ["A3-1"],
+          "command": "python3 -m unittest tests.test_report",
+          "exit_status": 0,
+          "status": "pass",
+          "artifact": "art-report-evidence",
+          "notes": "Isolated to this module; no peer file was imported."
+        }
+      ],
+      "review": {
+        "reviewer_actor": "astra-1",
+        "reviewer_model": "gpt-6-astra",
+        "decision": "accept",
+        "at": "2026-09-28T03:12:00Z",
+        "independent": true,
+        "verified_hashes": {
+          "art-report-evidence": "27a88d7adf8f2a822b86294f105c546870887ede13f1605b79ccf4dd43ba71a1"
+        }
+      }
+    },
+    {
+      "id": "T2",
+      "type": "verification",
+      "objective": "Independently reproduce both modules together once both are frozen.",
+      "state": "accepted",
+      "importance": "standard",
+      "requirements": ["R1", "R2"],
+      "depends_on": [],
+      "owner": {
+        "actor": "verifier-ds-3",
+        "model": "deepseek/deepseek-v4.1-flash"
+      },
+      "workspace": ".",
+      "baseline_revision": "uncommitted-working-tree",
+      "write_paths": [],
+      "read_paths": ["sample-evidence.txt", "sample-evidence-report.txt"],
+      "resources": [],
+      "verifies": ["T1", "T3"],
+      "acceptance": [
+        {
+          "id": "A2-1",
+          "criterion": "One combined run reproduces both recorded behaviours.",
+          "requirement_ids": ["R1", "R2"]
+        }
+      ],
+      "evidence": [
+        {
+          "id": "ev-3",
+          "acceptance": ["A2-1"],
+          "command": "python3 tools/check_cli.py --case json-output",
+          "exit_status": 0,
+          "status": "pass",
+          "artifact": "art-cli-evidence",
+          "notes": "Read-only reproduction against the frozen revisions."
+        }
+      ],
+      "review": {
+        "reviewer_actor": "astra-1",
+        "reviewer_model": "gpt-6-astra",
+        "decision": "accept",
+        "at": "2026-09-28T03:20:00Z",
+        "independent": true,
+        "notes": "Covers both frozen targets; the verifier is a different actor from both authors.",
+        "verified_hashes": {
+          "art-cli-evidence": "64f1d6839eb9aa225e32884e7d8e890315795651b698b6ea38f56efcbddacba0",
+          "art-report-evidence": "27a88d7adf8f2a822b86294f105c546870887ede13f1605b79ccf4dd43ba71a1"
+        }
+      }
+    }
+  ],
+  "observations": {
+    "total_elapsed_s": null,
+    "worker_turns": 4,
+    "provider_reported_tokens": null,
+    "source": "manual",
+    "note": "Missing values stay null; nothing is estimated."
+  },
+  "checkpoint": {
+    "next": "None; the example task is complete.",
+    "open_findings": []
+  }
+}

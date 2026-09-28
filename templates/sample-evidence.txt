@@ -1,0 +1,12 @@
+2026-09-28 09:31 demo evidence capture
+
+$ python3 -m unittest discover -s tests -t .
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.041s
+
+OK
+
+$ python3 tools/check_cli.py --case invalid-input ; echo "exit=$?"
+reports three lines, exits 2
+exit=2

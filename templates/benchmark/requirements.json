@@ -1,0 +1,35 @@
+{
+  "objective": "Implement the frozen textstats and report interfaces so the shipped tests and integration check pass.",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "textstats.word_count returns the number of whitespace-separated words.",
+      "checks": ["tests_textstats"],
+      "owner": "worker-a"
+    },
+    {
+      "id": "R2",
+      "text": "textstats.top_words lowercases, orders by count then alphabet, and honours n.",
+      "checks": ["tests_textstats"],
+      "owner": "worker-a"
+    },
+    {
+      "id": "R3",
+      "text": "report.render returns one 'word: count' line per top word and nothing for blank input.",
+      "checks": ["tests_report"],
+      "owner": "worker-b"
+    },
+    {
+      "id": "R4",
+      "text": "integration_check.py composes both modules and exits 0.",
+      "checks": ["integration"],
+      "owner": "integrator"
+    },
+    {
+      "id": "R5",
+      "text": "Both modules import only the standard library.",
+      "checks": ["stdlib_only"],
+      "owner": "worker-a and worker-b"
+    }
+  ]
+}
