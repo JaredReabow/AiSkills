@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
-"""One command that runs the whole parallelism skill harness.
+"""One command that runs The Council's whole harness.
 
     python3 tests/run_harness.py
 
 It runs, in order:
 
-1. every ``unittest`` module in ``tests/`` against real temporary workspaces;
-2. the bundled ``skill-creator/scripts/quick_validate.py`` packaging check from
-   ``/Users/leo/.codex/skills/.system/skill-creator`` when that path exists.
-3. the optional ``the-council/tests/run_harness.py`` companion suite when present.
+1. every ``unittest`` module in ``tests/`` against real temporary packets;
+2. the bundled ``skill-creator/scripts/quick_validate.py`` packaging check when
+   that validator happens to be installed.
 
-All stages are reported, exit codes are combined, and the process exits
-non-zero if any stage fails. Nothing is written outside temporary
-directories.
+Both stages report, exit codes combine, and the process exits non-zero if either
+stage fails. Nothing is written outside temporary directories, and the packaging
+stage degrades to SKIPPED on a host without the validator.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 import unittest
@@ -31,8 +31,8 @@ SCRIPTS_DIR = SKILL_ROOT / "scripts"
 TESTS_DIR = SKILL_ROOT / "tests"
 
 QUICK_VALIDATE_CANDIDATES = (
-    Path("/Users/leo/.codex/skills/.system/skill-creator/scripts/quick_validate.py"),
     Path.home() / ".codex" / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py",
+    Path("/Users/leo/.codex/skills/.system/skill-creator/scripts/quick_validate.py"),
 )
 
 
@@ -44,7 +44,7 @@ def find_quick_validate() -> Path | None:
     return None
 
 
-def run_unit_tests(verbosity: int) -> tuple[bool, str]:
+def run_unit_tests(verbosity: int) -> tuple:
     """Discover and run every test module in ``tests/``."""
     for path in (str(SCRIPTS_DIR), str(TESTS_DIR)):
         if path not in sys.path:
@@ -62,7 +62,7 @@ def run_unit_tests(verbosity: int) -> tuple[bool, str]:
     return result.wasSuccessful(), summary
 
 
-def run_quick_validate() -> tuple[bool | None, str]:
+def run_quick_validate() -> tuple:
     """Run the bundled skill validator. Returns None when it is not installed."""
     validator = find_quick_validate()
     if validator is None:
@@ -72,6 +72,7 @@ def run_quick_validate() -> tuple[bool | None, str]:
         capture_output=True,
         text=True,
         check=False,
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
     )
     combined = (completed.stdout + completed.stderr).strip()
     return completed.returncode == 0, f"{validator}: {combined}"
@@ -79,16 +80,11 @@ def run_quick_validate() -> tuple[bool | None, str]:
 
 def build_parser() -> argparse.ArgumentParser:
     """Build the harness argument parser."""
-    parser = argparse.ArgumentParser(description="Run the parallelism skill harness.")
+    parser = argparse.ArgumentParser(description="Run The Council skill harness.")
     parser.add_argument(
         "--quiet",
         action="store_true",
         help="reduce unittest verbosity to one line per module",
-    )
-    parser.add_argument(
-        "--skip-council",
-        action="store_true",
-        help="run only Parallelism checks, without the optional bundled Council suite",
     )
     parser.add_argument(
         "--skip-skill-validation",
@@ -98,44 +94,25 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list | None = None) -> int:
     """Run both stages and return a combined exit code."""
     args = build_parser().parse_args(argv)
     verbosity = 1 if args.quiet else 2
 
-    print(f"== unit tests: {TESTS_DIR}")
+    print(f"== council unit tests: {TESTS_DIR}")
     tests_ok, tests_summary = run_unit_tests(verbosity)
-    print(f"== unit tests: {'PASS' if tests_ok else 'FAIL'} ({tests_summary})")
+    print(f"== council unit tests: {'PASS' if tests_ok else 'FAIL'} ({tests_summary})")
 
-    validate_ok: bool | None = None
+    validate_ok = None
     if not args.skip_skill_validation:
-        print("== skill packaging validation")
+        print("== council skill packaging validation")
         validate_ok, validate_summary = run_quick_validate()
         state = "SKIPPED" if validate_ok is None else ("PASS" if validate_ok else "FAIL")
-        print(f"== skill validation: {state} ({validate_summary})")
-
-    # A subprocess isolates module names and temporary fixtures from the core
-    # suite. Council remains optional for standalone Parallelism installations.
-    council_ok = True
-    council_harness = SKILL_ROOT / "the-council" / "tests" / "run_harness.py"
-    if not args.skip_council and council_harness.is_file():
-        print("== optional Council harness", flush=True)
-        council_command = [sys.executable, str(council_harness)]
-        if args.quiet:
-            council_command.append("--quiet")
-        if args.skip_skill_validation:
-            council_command.append("--skip-skill-validation")
-        council_run = subprocess.run(council_command, check=False)
-        council_ok = council_run.returncode == 0
-        print(f"== Council harness: {'PASS' if council_ok else 'FAIL'}")
-    elif not args.skip_council:
-        print("== Council harness: SKIPPED (optional companion not installed in this checkout)")
+        print(f"== council skill validation: {state} ({validate_summary})")
 
     if not tests_ok:
         return 1
     if validate_ok is False:
-        return 1
-    if not council_ok:
         return 1
     return 0
 

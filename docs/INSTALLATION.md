@@ -209,6 +209,49 @@ the same name. Restart Codex if the skill is not discovered, then invoke
 
 ## 5. Run local checks
 
+### Install the optional Council skill
+
+Skip this step to keep using Parallelism's existing single-reviewer workflow.
+The companion's source is `the-council/` inside this repository. It needs its
+own discoverable skill path; keep one canonical source rather than maintaining
+independent copies. For the new-install path used above, create a sibling link
+on macOS or Linux, only if the destination does not already exist:
+
+```sh
+ln -s "$HOME/.agents/skills/parallelism/the-council" "$HOME/.agents/skills/the-council"
+```
+
+For an existing legacy installation under `~/.codex/skills`, use:
+
+```sh
+ln -s "$HOME/.codex/skills/parallelism/the-council" "$HOME/.codex/skills/the-council"
+```
+
+On Windows, a directory junction can expose the same source without copying:
+
+```powershell
+$skillsRoot = Join-Path $env:USERPROFILE '.agents/skills'
+New-Item -ItemType Junction -Path (Join-Path $skillsRoot 'the-council') -Target (Join-Path $skillsRoot 'parallelism/the-council')
+```
+
+Inspect any existing destination rather than overwriting it. Skill discovery
+behavior can vary by host: if the nested source is already listed, do not create
+a second independent copy. References resolving to the same source should be
+treated as the same skill. Restart or start a new task if discovery needs a refresh.
+
+For standalone Council use, install just the repository's `the-council/` folder
+into your discovered skills directory using the skill installer, or link that
+folder from a checkout outside the discovery directory. Include all its files.
+It does not require Parallelism, DeepSeek, or Codex Router unless your selected
+models require those integrations.
+
+Use `$parallelism $the-council` for collective acceptance during a build, or
+`$the-council` to review existing work. Supply one to three comma-separated
+model/effort entries after the Council mention to select its panel. Plain
+`$parallelism` and `$parallelism astra low` remain single-reviewer invocations.
+
+### Validate the installation
+
 From the installed `parallelism` folder, using Python 3.10+:
 
 ```sh
@@ -222,6 +265,11 @@ On Windows, use a configured Python 3.10+ interpreter, for example
 The current package runs **148 standard-library tests** over temporary files.
 These cover the ledger, scheduling, fixture grading, and associated invariants.
 The tests do not call a model API or require provider credentials.
+The combined harness also runs the bundled Council suite when present. Run
+`python3 the-council/tests/run_harness.py` from the repository root to check that
+companion alone, or add `--skip-council` to the root harness to isolate the
+original Parallelism stages. A standalone Parallelism install without the
+companion reports its suite as skipped; it remains usable.
 
 The harness also looks for Codex's bundled `skill-creator` packaging validator
 in its known `.codex/skills/.system` locations. If absent, that stage is reported
@@ -244,7 +292,8 @@ run only the standard-library checks:
 python3 tests/run_harness.py --quiet --skip-skill-validation
 ```
 
-Record skipped packaging validation separately; a passing unit suite does not
+This option skips packaging checks for both suites. Record skipped packaging
+validation separately; a passing unit suite does not
 establish that the optional stage ran.
 
 ## 6. Use it and check the first task
@@ -307,6 +356,10 @@ To remove the skill, move its folder outside all discovered skills directories
 and restart Codex if needed. Pause any task heartbeat it created for unfinished
 work. Removing the skill does not uninstall Codex Router, revoke provider keys,
 or change model settings. Manage those separately through their own tools.
+If you created a Council discovery link, remove that link before moving its
+source; do not recursively delete through a link. Removing only the Council link
+does not change Parallelism's default workflow, although hosts that discover
+nested skills may still list the bundled source.
 
 ## Troubleshooting
 

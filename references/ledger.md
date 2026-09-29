@@ -52,6 +52,15 @@ The example ledger uses the default reviewer model, `gpt-6-sol`. Its medium
 reasoning effort belongs in the checkpoint, since review records have no effort
 field. Replace the model and checkpoint effort when the user selects another route.
 
+Optional Council mode keeps this schema unchanged. Store its packet path/hash,
+package fingerprint, panel, membership generation, open findings and outcome in
+`checkpoint.council`. A legacy task `review` names the lead planner and references
+the collective acceptance packet in `notes`; it is a projection, not a substitute
+for the panel's decisions. Run The Council's checker and inspect the actual
+evidence before recording this projection. **This validator does not read or
+validate council packets, enforce quorum, or authenticate votes.** Follow the
+[additional acceptance gate](protocol.md#optional-council-integration).
+
 ## Schema
 
 Top level:

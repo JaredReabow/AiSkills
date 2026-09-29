@@ -62,3 +62,10 @@
   and troubleshooting. Distinguished configured native child routes from live
   execution proof and documented mixed-model compatibility limits. Runtime
   instructions, helper behavior, provider settings, and model bindings unchanged.
+- 2026-09-29: Implemented the requested The Council companion and optional
+  Parallelism integration. Preserved ordinary one-reviewer defaults, existing
+  ledger validation/scheduling, and the repository root install path. Added
+  independent panel review, collation, evidence-based reconciliation, bounded
+  decisions, local tests, companion discovery guidance and explicit mode handoffs.
+  Council acceptance uses a separate packet check before the legacy ledger
+  projection. No model/provider settings or remote M1 files changed.

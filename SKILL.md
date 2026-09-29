@@ -1,6 +1,6 @@
 ---
 name: parallelism
-description: Coordinate substantial work with the user's selected main model, a selectable planner and acceptance reviewer (Sol medium by default), and parallel DeepSeek workers. Use when the user wants delegated implementation with independent review and a reviewer model they can change during the task. The reviewer requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
+description: Coordinate substantial work with the user's selected main model, a selectable planner/reviewer (Sol medium by default), and parallel DeepSeek workers. Optionally use The Council for collective acceptance when requested. The planner requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
 ---
 
 # Parallelism
@@ -19,6 +19,57 @@ current model, enforce an approval gate in code, or grant tools the host does
 not expose. Respect higher-priority instructions and existing action
 permissions, and never rewrite AGENTS.md, provider settings, agent bindings, or
 concurrency settings while running it.
+
+## Optional Council review
+
+Without an explicit Council request, follow the single-reviewer workflow below
+unchanged. `$parallelism` defaults to Sol medium; `$parallelism astra low`
+selects one Astra-low planner/reviewer. The Council is not a dependency in this
+mode, and its absence must not prevent ordinary work.
+
+When the user requests `$parallelism $the-council`, or asks to bring The Council
+into ongoing work, load the installed `the-council/SKILL.md` using the host's
+skill catalog. In this repository its source is
+[the-council/SKILL.md](the-council/SKILL.md). Treat copies or symlinks resolving to
+the same source as one skill. If unavailable, report the missing skill; do not
+silently revert an explicit Council request to one reviewer.
+
+In council mode, the following rules override only single-reviewer acceptance:
+
+- Keep one main coordinator, execution ledger, worker pool, and wake-up timer.
+  Only the main agent spawns children. Council members do not spawn or edit the
+  implementation; they request checks or research through the main agent.
+- Use one lead planner, occupying **one of at most three council seats**. With
+  an explicit council list, its first member is lead unless the user chooses
+  another listed member. With no list, the current Parallelism reviewer becomes
+  lead and two Sol-medium reviewers fill the remaining seats. At a fresh default
+  start all three are Sol medium. If the user separately specifies incompatible
+  lead and panel selections, clarify rather than adding a fourth seat.
+- Text after `$parallelism` selects its lead planner; a comma-separated model
+  and effort list after `$the-council` selects that panel. Linked mentions behave
+  the same. One to three entries are allowed; do not truncate an oversized list.
+- The lead still approves implementation plans and consolidates worker requests.
+  **The council alone owns acceptance** of reviewed deliverables. All members
+  receive the same frozen task, amendments, requirements, artifacts, and evidence.
+  First reviews are independent, then all receive the same complete collation.
+- Follow The Council's decision/checker protocol before recording acceptance.
+  Require its `COMPLETE` result, actual reviewer decisions, and ordinary ledger
+  validation. Record the Council packet path/hash, panel, package fingerprint,
+  findings, and outcome in the checkpoint. The lead's legacy `review` record is
+  a projection of that collective decision, never a unilateral approval; include
+  the packet reference in its notes and retain every member's original report.
+- The existing `workflow.py` validator and scheduler remain single-reviewer
+  helpers: they do **not** validate Council consensus. See
+  [the integration protocol](references/protocol.md#optional-council-integration)
+  for the additional acceptance gate and reviewer capacity accounting.
+
+For an explicit switch back to single-reviewer mode, record the handoff and new
+authority; preserve all open findings, evidence, requirements and original
+attribution. A mode change does not resolve a finding. Prior accepted versions
+remain historical decisions, and outstanding concerns must be resolved before
+new acceptance. For a panel/model change, follow The Council's membership rules;
+do not silently shrink the panel after a timeout or use superseded late votes.
+Keep healthy independent workers running, but freeze the artifacts under review.
 
 ## 1. Establish the contract
 

@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "council_id": "council-parallelism-the-council",
+  "package": {
+    "id": "pkg-the-council",
+    "version": "3fc08c1+council",
+    "fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+    "task_manifest": "task.json",
+    "produced_by": [
+      "worker-a",
+      "worker-b"
+    ],
+    "artifacts": [
+      {
+        "path": "task.json",
+        "sha256": "6368bd49c270ee9887a95485e988f6f10c443376deef6848ee0e2609503caf1c"
+      },
+      {
+        "path": "SKILL.md",
+        "sha256": "289da2034bc8e2ede9fb0a3d51dd24cc507df1de9bc379f037642b066b0994b7"
+      },
+      {
+        "path": "scripts/council.py",
+        "sha256": "21c69f26f26489d44d10a9f7068f8b61a0ffcf845ad90ca484647910d81fe38a"
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "Parallelism keeps its current single-reviewer behaviour."
+    },
+    {
+      "id": "R2",
+      "text": "The Council seats one to three independent reviewers."
+    },
+    {
+      "id": "R3",
+      "text": "Completion needs every reviewer accepting one package."
+    }
+  ],
+  "required_checks": [
+    {
+      "id": "C1",
+      "text": "council harness passes",
+      "criteria": "tests/run_harness.py exits 0",
+      "status": "passed"
+    },
+    {
+      "id": "C2",
+      "text": "parallelism harness still passes",
+      "criteria": "tests/run_harness.py exits 0 in the parent skill",
+      "status": "passed"
+    }
+  ],
+  "integration": {
+    "mode": "council",
+    "lead_planner_actor": "rev-lead",
+    "single_reviewer_actor": null,
+    "panel_generation": 1,
+    "mode_history": []
+  },
+  "panel": [
+    {
+      "actor": "rev-lead",
+      "model": "gpt-6-sol",
+      "reasoning_effort": "medium",
+      "role": "lead"
+    },
+    {
+      "actor": "rev-2",
+      "model": "gpt-6-sol",
+      "reasoning_effort": "medium",
+      "role": "reviewer"
+    },
+    {
+      "actor": "rev-3",
+      "model": "gpt-6-sol",
+      "reasoning_effort": "medium",
+      "role": "reviewer"
+    }
+  ],
+  "rounds": [
+    {
+      "id": "round-1-independent",
+      "kind": "independent",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "new_evidence": false,
+      "reviewers": [
+        "rev-lead",
+        "rev-2",
+        "rev-3"
+      ],
+      "raised_finding_ids": [
+        "F1",
+        "F2"
+      ]
+    },
+    {
+      "id": "round-2-reconciliation",
+      "kind": "reconciliation",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "new_evidence": true,
+      "reviewers": [
+        "rev-lead",
+        "rev-2",
+        "rev-3"
+      ],
+      "raised_finding_ids": []
+    }
+  ],
+  "initial_reports": [
+    {
+      "actor": "rev-lead",
+      "round_id": "round-1-independent",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "panel_generation": 1,
+      "finding_ids": []
+    },
+    {
+      "actor": "rev-2",
+      "round_id": "round-1-independent",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "panel_generation": 1,
+      "finding_ids": [
+        "F2"
+      ]
+    },
+    {
+      "actor": "rev-3",
+      "round_id": "round-1-independent",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "panel_generation": 1,
+      "finding_ids": [
+        "F1"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "origin_actor": "rev-3",
+      "raised_at_round": "round-1-independent",
+      "requirement_ids": [
+        "R2"
+      ],
+      "classification": "blocking",
+      "status": "resolved",
+      "summary": "Fourth reviewer accepted by the panel parser.",
+      "resolution": {
+        "reason": "Panel cap is enforced and covered by a test.",
+        "evidence": [
+          "tests/test_council.py::PanelRules",
+          "scripts/council.py panel()"
+        ],
+        "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308"
+      }
+    },
+    {
+      "id": "F2",
+      "origin_actor": "rev-2",
+      "raised_at_round": "round-1-independent",
+      "requirement_ids": [
+        "R1"
+      ],
+      "classification": "suggestion",
+      "status": "open",
+      "summary": "Could document the standalone invocation in the README."
+    }
+  ],
+  "reviewer_finals": [
+    {
+      "actor": "rev-lead",
+      "round_id": "round-2-reconciliation",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "panel_generation": 1,
+      "covered_requirement_ids": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "verdict": "COMPLETE",
+      "outcomes": [
+        {
+          "finding_id": "F1",
+          "disposition": "resolved"
+        },
+        {
+          "finding_id": "F2",
+          "disposition": "not_applicable"
+        }
+      ]
+    },
+    {
+      "actor": "rev-2",
+      "round_id": "round-2-reconciliation",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "panel_generation": 1,
+      "covered_requirement_ids": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "verdict": "COMPLETE",
+      "outcomes": [
+        {
+          "finding_id": "F1",
+          "disposition": "resolved"
+        },
+        {
+          "finding_id": "F2",
+          "disposition": "accepted"
+        }
+      ]
+    },
+    {
+      "actor": "rev-3",
+      "round_id": "round-2-reconciliation",
+      "package_fingerprint": "36f6fcc45cc7d2af146c748801a3c3766b8542f50687f61b57872b82b2176308",
+      "panel_generation": 1,
+      "covered_requirement_ids": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "verdict": "COMPLETE",
+      "outcomes": [
+        {
+          "finding_id": "F1",
+          "disposition": "resolved"
+        },
+        {
+          "finding_id": "F2",
+          "disposition": "not_applicable"
+        }
+      ]
+    }
+  ]
+}

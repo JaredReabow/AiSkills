@@ -1,0 +1,4 @@
+interface:
+  display_name: "The Council"
+  short_description: "One to three independent reviewers accepting one frozen package"
+  default_prompt: "Use $the-council for this task: seat up to three independent reviewers on the same frozen package (three Sol medium reviewers by default), have each review blind first, collate every finding with its origin, then have each reviewer reconcile the collated findings and return a verdict. Require unanimous acceptance of the same package version before reporting the work complete."

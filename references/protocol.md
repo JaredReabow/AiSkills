@@ -77,7 +77,51 @@ capacity, the artifact directory for evidence, and the user's limits:
 > finish the turn; the main agent will resume you with results. Read only the
 > relevant parts of the skill and sources.
 
-## Native tool mapping
+## Optional Council integration
+
+Ordinary Parallelism retains one planner/acceptance reviewer. Load The Council
+only when requested. In that mode the lead planner is a council member and
+continues proposing plans and worker briefs; it has no unilateral acceptance
+authority. The main agent sends identical review packages to the full panel and
+collates reports without resolving disagreements itself.
+
+Before marking a task accepted:
+
+1. Freeze the current task and dependency artifacts. Run The Council's packet
+   checker using its documented schema and `--package-dir` pointing to the
+   frozen artifact directory; do not use a record-only diagnostic as acceptance.
+   Verify the package
+   fingerprint against those exact artifacts, user requirements and amendments.
+2. Require the complete active panel's evidence-based final acceptance, all
+   required checks passed, and the checker's `COMPLETE`. A missing, stale, or
+   incomplete Council packet cannot be replaced with the lead's opinion.
+3. Record the packet path and SHA-256, panel and membership generation, reviewed
+   package fingerprint, findings and outcome in the ledger checkpoint. Record
+   `reviewer_actor`/`reviewer_model` as the lead member in the legacy task review,
+   with a note identifying it as a projection of the Council packet. Its
+   `verified_hashes` must still cover the actual dependency artifacts.
+4. Run ordinary `workflow.py validate`, including `--mode final` at completion.
+   It validates the existing ledger invariants, not Council votes. Passing that
+   command alone does not satisfy council mode. Changes to reviewed inputs
+   invalidate affected Council decisions and require a new package and review.
+
+Reserve runnable capacity for all council members when review is pending. The
+unchanged scheduler reserves one reviewer slot for `ready_for_review` tasks.
+For council review, add the **additional** reserved seats to `--other-active`:
+`actual_other_jobs + max(0, reserved_council_seats - 1)`. Do not also count those
+same reserved reviewer actors as other jobs. Outside that readiness state the
+scheduler reserves no reviewer slot; count actual council work explicitly in
+`--other-active`. The main agent owns this accounting and records it. If host
+capacity is smaller than the panel, stage the independent reviews against the
+same frozen package without exposing peers' reports. Preserve all requested
+seats and explain reduced concurrency rather than dropping a reviewer.
+
+The Council and implementation workers share the existing main-agent timer.
+There is no second orchestrator, nested reviewer team, or independent Council
+heartbeat when integrated. Standalone Council reviews do not authorize repairs;
+in an already-authorized build, confirmed findings become bounded worker jobs.
+
+## Native tool mapping (single reviewer or a Council seat)
 
 Read the current schema before calls. This host exposed these shapes when the
 skill was created; names and available routes must be checked in later sessions.

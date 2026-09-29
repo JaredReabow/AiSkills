@@ -2,6 +2,13 @@
 
 ## 2026-09-29
 
+- Added The Council as an optional companion review skill with one to three
+  independently reviewing members, shared findings, and collective acceptance.
+  Parallelism retains its current single-reviewer default and unchanged ledger
+  validator/scheduler; Council mode adds a separate decision gate, one lead
+  planner within the panel, and handoffs that preserve unresolved findings.
+- Added Council decision tests to the combined harness and documented local
+  companion installation, standalone use, capacity and dependency boundaries.
 - Added a public README explaining the team, reviewer selection, dynamic worker
   counts, evidence, timers, and dependency boundaries; added an installation
   guide covering Codex Router, DeepSeek, native route verification, skill

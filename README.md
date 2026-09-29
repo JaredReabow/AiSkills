@@ -13,9 +13,11 @@ implementation. A small edit usually does not justify the coordination overhead.
 **Start here:** [Installation and dependencies](docs/INSTALLATION.md) ·
 [Agent instructions](SKILL.md) · [Change history](CHANGELOG.md)
 
-AiSkills currently contains **one skill, Parallelism, at the repository root**.
-Install this repository into a folder named `parallelism`; there is no nested
-`skills/parallelism` directory.
+AiSkills contains **Parallelism at the repository root** and the optional
+**[The Council](the-council/SKILL.md)** review skill under `the-council/`.
+Existing Parallelism installation paths continue to work. Install the companion
+as a separately discoverable `the-council` skill when you want collective review;
+see [Council installation](docs/INSTALLATION.md#install-the-optional-council-skill).
 
 ## How the team works
 
@@ -107,6 +109,50 @@ continue. The outgoing reviewer loses authority over new decisions, and its late
 approvals are ignored. Previous decisions retain their original attribution.
 An unavailable model or unsupported effort is reported instead of silently
 substituted.
+
+## Optional review by The Council
+
+Parallelism without The Council keeps its existing single-reviewer workflow and
+Sol-medium default. The Council is a separate, optional review skill; requesting
+it replaces single-person acceptance with a panel of one to three reviewers.
+
+| Invocation | Review behavior |
+| --- | --- |
+| `$parallelism` | One Sol-medium planner/reviewer, as before. |
+| `$parallelism astra low` | One Astra-low planner/reviewer, as before. |
+| `$parallelism $the-council` | Three Sol-medium reviewers at a fresh default start. |
+| `$parallelism $the-council sol medium, astra low, deepseek high` | Explicit panel; first member leads planning unless you choose another listed member. |
+| `$the-council sol medium, sol medium` | Standalone review with two distinct actors. It does not authorize implementation changes. |
+
+The main agent still owns workers, task state and the wake-up timer. One council
+member leads planning; there is no fourth lead reviewer. If you bring the council
+into existing Parallelism work without specifying its panel, the current reviewer
+becomes lead and two Sol-medium members join. Explicit lists select the whole
+panel. Model aliases are checked against the host's actual available routes.
+
+Every member receives the same frozen task, requirements and artifact evidence.
+Their first reviews are independent. The main agent collates all findings,
+preserving minority objections, and returns the same collation to everyone.
+Reviewers then reassess specific disagreements using evidence. Completion needs
+all participating reviewers to accept the same version, all required checks to
+pass, and no supported blocking finding left open. Two approvals cannot erase a
+third reviewer's reproduced bug. A timeout is not approval.
+
+Possible outcomes are `COMPLETE`, `CHANGES_NEEDED`, `EVIDENCE_NEEDED`, and
+`BLOCKED`. Discussion is bounded; unresolved questions are reported rather than
+debated indefinitely. User-requested panel or mode changes carry forward open
+findings and historical attribution. They do not erase defects or stale evidence.
+
+The Council has its own read-only decision checker. In council mode its check
+and the existing Parallelism ledger check are both required. The legacy ledger
+validator alone does not establish consensus. Neither helper authenticates model
+execution or establishes the semantic truth of a review. See the
+[integration protocol](references/protocol.md#optional-council-integration).
+
+The Council itself needs native reviewer routes, not specifically DeepSeek or
+Codex Router. Those dependencies apply when the selected reviewers or workers
+use them. Ordinary Parallelism works without installing The Council; an explicit
+council request never silently falls back if the skill or a model is missing.
 
 ## How much parallelism?
 
@@ -202,7 +248,9 @@ From the installed skill folder:
 python3 tests/run_harness.py --quiet
 ```
 
-The current suite contains 148 tests. Passing it checks the local helper logic;
+The Parallelism core suite contains 148 tests; the same command also runs the
+optional bundled Council suite when present. `--skip-council` checks only the
+existing Parallelism stages. Passing checks verifies the local helper logic;
 it does not prove live reviewer routing, DeepSeek inference, timer delivery, or
 performance savings. See [installation validation](docs/INSTALLATION.md#5-run-local-checks)
 for optional packaging dependencies and a first-task checklist.
