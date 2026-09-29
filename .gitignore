@@ -1,0 +1,3 @@
+# Python test and validation caches
+__pycache__/
+*.py[cod]

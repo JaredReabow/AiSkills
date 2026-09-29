@@ -69,3 +69,5 @@
   decisions, local tests, companion discovery guidance and explicit mode handoffs.
   Council acceptance uses a separate packet check before the legacy ledger
   projection. No model/provider settings or remote M1 files changed.
+
+- 2026-09-29: Removed generated Python test bytecode from the published Council package and ignored Python caches. No skill or checker behavior changed.

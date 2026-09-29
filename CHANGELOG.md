@@ -117,3 +117,5 @@
 - `SKILL.md` step 4 no longer claims the validator checks every brief field; it
   lists the machine-checked subset separately from prompt-only fields, and adds
   the rule to run only isolated checks while a peer owns an input.
+
+- Packaging cleanup: exclude generated Python bytecode and test caches.
