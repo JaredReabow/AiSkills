@@ -941,6 +941,39 @@ class OwnershipConflicts(support.LedgerCase):
 class EvidenceAndReview(support.LedgerCase):
     """Acceptance must rest on real, current, independently reviewed evidence."""
 
+    def test_user_selected_reviewer_models_are_not_restricted_to_astra(self):
+        """Routing names are declarations; independence is between actors."""
+        for model in ("custom/reviewer", "deepseek/deepseek-v4.1-flash"):
+            with self.subTest(model=model):
+                document = self.document()
+                for task_id in ("T1", "T2"):
+                    review = support.task(document, task_id)["review"]
+                    review["reviewer_actor"] = "selected-reviewer"
+                    review["reviewer_model"] = model
+                report = self.validate(document)
+                self.assertTrue(report.ok, report.errors)
+
+    def test_reviewer_switch_preserves_prior_attribution_and_evidence(self):
+        """Historical and incoming reviewers coexist without relabelling work."""
+        document = self.document()
+        prior = json.loads(json.dumps(support.task(document, "T1")["review"]))
+        review = support.task(document, "T2")["review"]
+        review["reviewer_actor"] = "replacement-reviewer"
+        review["reviewer_model"] = "custom/replacement"
+        report = self.validate(document)
+        self.assertTrue(report.ok, report.errors)
+        self.assertEqual(prior, support.task(document, "T1")["review"])
+        review["verified_hashes"] = {}
+        self.assertInvalid(self.validate(document), "omitted artifacts from its dependency closure")
+
+    def test_relabelling_owner_model_does_not_allow_self_approval(self):
+        """A model switch cannot turn the author's actor into a reviewer."""
+        document = self.document()
+        review = support.task(document, "T1")["review"]
+        review["reviewer_actor"] = "worker-a"
+        review["reviewer_model"] = "custom/replacement"
+        self.assertInvalid(self.validate(document), "self-approval rejected")
+
     def test_self_approval_rejected(self):
         document = self.document()
         support.task(document, "T1")["review"]["reviewer_actor"] = "worker-a"

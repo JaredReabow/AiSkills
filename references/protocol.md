@@ -1,6 +1,6 @@
 # Delegation protocol
 
-Detailed companion to `SKILL.md`. Use it when writing an Astra brief, a worker
+Detailed companion to `SKILL.md`. Use it when writing a reviewer brief, a worker
 handoff, or a review packet. The ledger schema that records these fields is in
 [ledger.md](ledger.md).
 
@@ -57,9 +57,9 @@ Copy this into each worker's assignment:
 > you deferred. A test against a clearly labelled local stub of an agreed
 > interface is fine; importing a peer's changing file is not.
 
-## Astra brief
+## Reviewer brief
 
-Include this contract in Astra's assignment, alongside the original request and
+Include this contract in the reviewer's assignment, alongside the original request and
 every amendment verbatim, the ledger path, the baseline revision, the available
 capacity, the artifact directory for evidence, and the user's limits:
 
@@ -81,21 +81,23 @@ capacity, the artifact directory for evidence, and the user's limits:
 
 Read the current schema before calls. This host exposed these shapes when the
 skill was created; names and available routes must be checked in later sessions.
-A clean context requires supplying all relevant constraints.
+A clean context requires supplying all relevant constraints. Replace the model
+placeholder below with the user-selected route and choose a reasoning effort
+that route supports. The placeholder is not a callable model id.
 
 ```json
 {
-  "task_name": "astra_review",
+  "task_name": "selected_reviewer",
   "agent_type": "default",
-  "model": "gpt-6-astra",
+  "model": "<user-selected-reviewer-model>",
   "reasoning_effort": "high",
   "fork_turns": "none",
-  "message": "Full task contract, baseline, constraints, and Astra brief"
+  "message": "Full task contract, baseline, constraints, and the reviewer brief"
 }
 ```
 
 That object is an example argument to `collaboration.spawn_agent`, not a command
-to execute verbatim. Use the available generic role for explicit Astra
+to execute verbatim. Use the available generic role for explicit reviewer model
 selection; a role with a pinned model takes precedence over a conflicting spawn
 model.
 
@@ -105,12 +107,18 @@ This installation also exposed the worker role
 still match the intended worker route. Other DeepSeek roles are valid when their
 current bindings and instructions fit the assignment. Do not use an old role
 name without checking availability, or an inherited default as an unverified
-Astra.
+reviewer.
 
 For continuation, this host offers `collaboration.followup_task` for an idle
-child. Astra can return a decision packet as its final response; the main agent
+child. The reviewer can return a decision packet as its final response; the main agent
 cleans up that turn, schedules work, and later resumes the reviewer with
 evidence. Use the checkpoint if the host cannot resume that child.
+
+When the user changes reviewer models, follow the handoff in `SKILL.md`. Only
+the currently designated reviewer can issue new acceptance decisions. Include
+its actor id and actual selected model in each packet; keep earlier attribution
+intact. A pinned role or an idle child cannot be repurposed as a different model
+merely by describing it differently.
 
 ## Capacity and backpressure
 
@@ -142,7 +150,7 @@ a reason to every suggestion. It never dispatches.
 
 ## Decision packets
 
-Astra's planning reply names the approved contract and the tasks it wants. A
+The reviewer's planning reply names the approved contract and the tasks it wants. A
 research request looks like this:
 
 ```yaml
@@ -162,7 +170,7 @@ requests:
 ```
 
 The main agent fills in the known baseline and context before dispatch. Missing
-decision-critical details go back to Astra rather than being guessed. Research
+decision-critical details go back to the reviewer rather than being guessed. Research
 requests must identify how the answer affects a decision.
 
 An acceptance packet identifies the exact task and artifact version, the

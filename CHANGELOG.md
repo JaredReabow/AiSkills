@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-29
+
+- Reviewer model is chosen by the user at task start, with no implicit Astra
+  default, and can change during work through an explicit evidence handoff.
+- Preserve historical review attribution, ignore superseded approvals, and keep
+  independent approved workers running during reviewer replacement.
+- Updated invocation metadata, protocol, ledger examples and evaluation scenarios;
+  the ledger remains model-agnostic and retains actor-based self-approval checks.
+
 ## 2026-09-28
 
 - Main-agent waits now schedule timer events (or a thread heartbeat) to resume

@@ -34,7 +34,7 @@ See `requirements.json`. Requirement ids are stable and acceptance maps to them.
 | worker-a (DeepSeek) | `task/textstats.py` | R1, R2 |
 | worker-b (DeepSeek) | `task/report.py` | R3 |
 | verifier (DeepSeek, different actor) | read-only | reproduce R4 |
-| Astra | review and acceptance | confirm R1-R5 against the diff and evidence |
+| Selected reviewer | review and acceptance | confirm R1-R5 against the diff and evidence |
 
 `task/tests/` and `task/integration_check.py` ship with the fixture and belong to
 no worker. Editing them invalidates the grade.

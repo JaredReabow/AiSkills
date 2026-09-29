@@ -37,7 +37,19 @@ recorded in the ledger. Those strings are evidence metadata for a human reader.
 **What a ledger does not prove.** `owner.actor`, `owner.model`, and `command`
 are declarations. The checker does not authenticate routing, re-run anything, or
 treat a log as proof of execution. It verifies that declared artifact hashes
-match the bytes actually on disk. Treat the rest as claims that Astra inspects.
+match the bytes actually on disk. Treat the rest as claims that the reviewer inspects.
+
+Record the active reviewer actor/model and selection time in `checkpoint`.
+Record a user-requested switch in `objective.amendments` and append its handoff
+to the checkpoint. Each new `review` records `reviewer_actor` and
+`reviewer_model`; the schema permits legacy missing model fields, but the skill
+requires attribution for new decisions. Preserve previous review packets in
+checkpoint-linked evidence when replacing a task review. The checker accepts
+arbitrary model strings and historical reviewers; it does not authenticate
+routes, enforce the active reviewer, or execute handoffs.
+
+The model placeholders in the example ledger are illustrative. Replace them
+with verified user-selected model ids when using it for real work.
 
 ## Schema
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Parallelism"
-  short_description: "Your chosen lead, Astra review, DeepSeek workers"
-  default_prompt: "Use $parallelism for this task: preserve my selected main model, have Astra direct and accept the work, and run independent DeepSeek workers in parallel."
+  short_description: "Your chosen lead and reviewer, parallel DeepSeek workers"
+  default_prompt: "Use $parallelism for this task: preserve my selected main model, use my chosen reviewer model to plan and accept the work (ask if unspecified), allow me to change the reviewer during the task, and run independent DeepSeek workers in parallel."

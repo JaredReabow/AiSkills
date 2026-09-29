@@ -81,7 +81,7 @@ would hide which half of the task is actually done.
 
 ## Suggested roles and brief
 
-Give Astra and the workers the contents of `brief.md` plus the ledger. The short
+Give the reviewer and the workers the contents of `brief.md` plus the ledger. The short
 version:
 
 | Role | Owns | Acceptance |
@@ -89,7 +89,7 @@ version:
 | worker-a (DeepSeek) | `task/textstats.py` | `R1`, `R2` |
 | worker-b (DeepSeek) | `task/report.py` | `R3` |
 | verifier (DeepSeek, different actor from the author) | read-only | reproduce `R4` from a clean run |
-| Astra | review and acceptance | confirm `R1`-`R5` against the diff and the recorded evidence |
+| Selected reviewer | review and acceptance | confirm `R1`-`R5` against the diff and the recorded evidence |
 
 The two modules can be written in parallel because the interface is frozen in
 `brief.md` before either worker starts. That is the point of the fixture: the

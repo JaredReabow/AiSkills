@@ -44,3 +44,8 @@
   completion, user stop/pause, exhausted budget, or a user-input blocker.
   Documented thread-heartbeat fallback and bounded waits when scheduling fails;
   ordinary sleeps do not establish a durable wake-up.
+- 2026-09-29: Generalized the planning/acceptance reviewer to the user-selected
+  model at task start, with an explicit choice if unspecified and route checks.
+  Added mid-task replacement, checkpoint/evidence handoff, historical attribution,
+  and superseded-review handling. Updated metadata, references and examples;
+  retained separate review actors, DeepSeek workers and timer-event continuation.

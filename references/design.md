@@ -12,16 +12,21 @@ Select any main model that supports Codex's agent tools, then invoke:
 
 ```text
 Use $parallelism to implement [objective]. Keep my selected main model.
-Astra should plan and review, and ask you to create parallel DeepSeek workers
+Use [reviewer model] to plan and review, and request parallel DeepSeek workers
 for independent tasks.
 ```
+
+To switch later, say `Change the reviewer to [new model] for the rest of this
+task.` If no initial reviewer was specified, the main agent asks before review
+or reviewer-dependent dispatch. A switch hands off evidence and open findings
+without changing the main model, worker models, or earlier attribution.
 
 Optionally add a worker cap, budget, or restriction such as plan-only. Without a
 user cap, choose useful concurrency within the actual host limit; do not raise
 host settings. Selecting this skill does not switch the already-running model.
 DeepSeek identifies the worker model rather than a requirement for the main
-model. Both child routes must be available in the session. When Astra is the main
-model, it still creates a separate Astra reviewer child for independent artifact
+model. Both child routes must be available in the session. When the reviewer and
+main agent use the same model, create a separate reviewer child for independent artifact
 review. If the skill is absent from discovery, refresh the session or reference
 its absolute `SKILL.md` path. Do not claim discovery until it is observed in the
 host.
@@ -29,7 +34,7 @@ host.
 ```text
 User
   |
-Your selected main agent -- requests/results -- Astra planner and reviewer
+Your selected main agent -- requests/results -- Your selected planner and reviewer
   |-- DeepSeek worker 1: approved independent task
   |-- DeepSeek worker 2: approved independent task
   |-- ...
@@ -40,7 +45,7 @@ N is dynamic: use as many ready independent tasks as available capacity and the
 user's budget permit. Several research, implementation, verification, or
 integration workers can run at once. Refill freed slots from the approved queue.
 Simultaneous workers and total workers across the task are separate counts. The
-reviewer and workers are siblings. Astra has decision authority within the task;
+reviewer and workers are siblings. The reviewer has decision authority within the task;
 the main agent owns scheduling and enforces the review workflow.
 
 ## Why this design
@@ -64,19 +69,19 @@ Primary sources checked on 2026-09-28:
 
 Three design choices are inferences rather than vendor prescription:
 
-1. **Astra as a sibling that requests workers through the main agent.** This
+1. **The reviewer as a sibling that requests workers through the main agent.** This
    centralises scheduling, capacity accounting, and task ownership without
    nested delegation, and keeps exactly one process spawning children.
 2. **Independent verification for important changes, on a normal worker.** A
    reviewer that shares the author's context repeats the author's blind spots;
-   using a sibling worker keeps Astra free for batched acceptance. Fresh Astra
+   using a sibling worker keeps the reviewer free for batched acceptance. Fresh reviewer
    passes are reserved for risk rather than run on every routine task.
 3. **A ledger plus a read-only checker.** Prompt-only discipline drifts across a
    long run. Recording requirements, ownership, evidence hashes, and review
    decisions in one file makes the drift visible without giving a helper the
    authority to dispatch anything.
 
-The sources do not establish that this exact DeepSeek/Astra combination outperforms
+The sources do not establish that any particular worker/reviewer combination outperforms
 other combinations. Measure it on representative tasks before making that claim,
 using [benchmark.md](benchmark.md) and repeated comparable runs.
 
@@ -104,7 +109,7 @@ Passing evidence per scenario:
 | Scenario | Observable passing outcome |
 | --- | --- |
 | Two independent modules and one shared manifest | Independent work overlaps; one owner handles the manifest; combined checks pass. |
-| Missing factual prerequisite | Astra requests a specific source-backed research task before dependent implementation. |
+| Missing factual prerequisite | The reviewer requests a specific source-backed research task before dependent implementation. |
 | Worker says tests passed but logs show failure | Acceptance is withheld, a correction is requested, and the revised evidence is checked. |
 | New edit after acceptance | Affected acceptance is invalidated and the new artifact is reviewed. |
 | Child completes; corrections are needed | The main agent marks it done, resumes it correctly, and avoids a duplicate writer. |
@@ -115,10 +120,14 @@ Passing evidence per scenario:
 | One module is still being written | Peers run only isolated checks; cross-module checks are deferred and recorded, not run against a changing file. |
 | Two queued writers claim the same path | Only one is suggested; the other stays deferred with the ownership reason. |
 | A shipped test is edited before grading | Integrity fails before anything is executed and every requirement reports `not_run`. |
-| Astra route unavailable | The task reports the routing limitation; the main agent does not impersonate Astra approval. |
-| Main model is not DeepSeek | The selected model is preserved; explicit routes still select Astra review and DeepSeek workers. |
-| Main model is Astra | A separate Astra child reviews artifacts; the main agent cannot self-approve. |
-| User changes scope during work | The change reaches Astra, the contract is updated, and affected jobs are steered. |
+| Selected reviewer route unavailable | The task reports the routing limitation; the main agent does not impersonate the reviewer's approval. |
+| Main model is not DeepSeek | The selected model is preserved; explicit routes still select the chosen reviewer and DeepSeek workers. |
+| Main and reviewer use the same model | A separate reviewer child reviews artifacts; the main agent cannot self-approve. |
+| User changes scope during work | The change reaches the reviewer, the contract is updated, and affected jobs are steered. |
+| Reviewer unspecified | Ask for the reviewer choice; collect independent baseline information meanwhile. |
+| User switches reviewer during a pending review | Verify the new route, hand off checkpoint/evidence, ignore late outgoing approvals, and preserve healthy workers. |
+| Replacement reviewer unavailable | Report the limitation; hold new acceptance and ask for a supported choice without a silent fallback. |
+| Previously accepted work after a switch | Keep original attribution and unchanged artifact acceptance; the new reviewer owns final acceptance and explicitly reopened findings. |
 | Root contributes code | Root changes receive the same review as worker changes. |
 
 Evaluate correctness, missed defects, unnecessary agents and rework, total

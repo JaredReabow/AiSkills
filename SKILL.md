@@ -1,19 +1,19 @@
 ---
 name: parallelism
-description: Coordinate substantial work with the user's selected main model, Astra as the planner and acceptance reviewer, and parallel DeepSeek workers. Use when the user wants their main agent to orchestrate Astra review and DeepSeek implementation. Astra requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
+description: Coordinate substantial work with the user's selected main model, a user-selected planner and acceptance reviewer, and parallel DeepSeek workers. Use when the user wants delegated implementation with independent review and a reviewer model they can change during the task. The reviewer requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
 ---
 
 # Parallelism
 
 Run one flat team: the user's selected main agent owns scheduling and
-communication; one Astra child owns architecture, research decisions, and
+communication; one reviewer child owns architecture, research decisions, and
 acceptance; DeepSeek worker children do bounded research, implementation,
-verification, and integration. Astra asks the main agent to create or resume
+verification, and integration. The reviewer asks the main agent to create or resume
 workers. Only the main agent spawns.
 
 This is a workflow instruction, not a model switch or a permission boundary.
-Keep whichever main model the user selected, including DeepSeek or Astra, and
-keep a separate Astra reviewer child even when Astra is the main model, so
+Keep whichever main model the user selected, and keep a separate reviewer child
+even when the main agent and reviewer use the same model, so
 authoring and acceptance stay separate roles. The skill cannot change the
 current model, enforce an approval gate in code, or grant tools the host does
 not expose. Respect higher-priority instructions and existing action
@@ -27,20 +27,55 @@ constraints, existing approvals, the workspace baseline including uncommitted an
 untracked work, and any user time, spending, or concurrency limit. Reuse an
 existing plan.
 
-Check the live tool schema and model choices. The intended routes are
-`gpt-6-astra` for the reviewer and `deepseek/deepseek-v4.1-flash` for workers,
-unless the user selects another available DeepSeek model. Verify the main model
-from session metadata: global defaults and model self-identification do not
-prove it. Use explicit child model selection or a verified installed role, and
-never use a DeepSeek-pinned role for Astra. If a required route is missing or
-rejected, report that limitation instead of silently substituting a model.
+At the start of each task, use the reviewer model the user explicitly selected
+for that task. If none was supplied, ask which available model should plan and
+review before dispatching the reviewer or work that needs its approval. Do not
+silently default to Astra, the main model, or a prior task's selection. Read-only
+baseline collection can continue while waiting for the answer. Any model with
+an available native subagent route may fill the reviewer role, including the
+same model as the main agent or workers; actor separation still applies.
 
-Send Astra the **original request and every amendment verbatim**, plus the
-constraints, baseline, artifact paths, capacity, and the Astra brief in
-[the delegation protocol](references/protocol.md). Astra replies with an
+Check the live tool schema and model choices. Record the user's choice, resolved
+reviewer model id, reviewer actor id, and selection time in the checkpoint.
+Workers still use `deepseek/deepseek-v4.1-flash` unless the user selects another
+available DeepSeek model. Verify the main model from session metadata: global
+defaults and model self-identification do not prove it. Use explicit child model
+selection or a verified installed role whose binding matches the requested
+model and whose instructions permit planning and review. If the route is missing
+or rejected, report it and ask for another
+selection; do not silently substitute or change provider settings.
+
+Send the reviewer the **original request and every amendment verbatim**, plus the
+constraints, baseline, artifact paths, capacity, and the reviewer brief in
+[the delegation protocol](references/protocol.md). The reviewer replies with an
 approved plan and worker requests, or names the missing evidence. Translate
 those requests into tool calls. You may reorder ready independent jobs; changed
-scope, shared contracts, or acceptance criteria go back to Astra first.
+scope, shared contracts, or acceptance criteria go back to the reviewer first.
+
+### Change the reviewer during work
+
+The user can select a different reviewer at any time. Record the request
+verbatim as an objective amendment and add a dated handoff to the checkpoint:
+outgoing/incoming actor and model, accepted artifact versions, pending reviews,
+open findings, running jobs, and the next decision. Verify the new route before
+claiming a switch succeeded. If unavailable, hold new acceptance decisions and
+ask for a supported choice; existing independent approved work may continue.
+
+Stop assigning reviews to the outgoing actor and mark its authority superseded
+at the handoff boundary. Finish or stop only its review turn as needed, clean up
+its slot, and spawn a separate reviewer using the newly selected model. Never
+pretend that resuming the old actor changes its model. Give the new reviewer the
+original request and amendments, ledger, contracts, evidence, and open findings.
+It must acknowledge the handoff and inspect evidence before deciding; ignore
+late outgoing decisions as approvals. Keep healthy workers running unless the
+user's change affects their scope or safety.
+
+Preserve earlier review records with their original actor/model attribution;
+a model change alone does not invalidate unchanged, previously accepted
+artifacts. Archive a prior decision before replacing a task's review record.
+The new reviewer owns pending decisions and final acceptance, and may reopen
+prior work with specific findings. Changed artifacts or contracts still require
+fresh review. Record the actual reviewer model on every new review packet.
 
 ## 2. Record it as a ledger
 
@@ -56,7 +91,7 @@ Schema, example, and commands: [ledger reference](references/ledger.md). Use
 
 ## 3. Fill capacity with independent work
 
-There is no fixed worker count. Astra identifies every useful independent task
+There is no fixed worker count. The reviewer identifies every useful independent task
 and requests a worker for each ready bounded task. Keep an explicit approved
 queue and fill available capacity with ready, independent jobs. Capacity comes
 from the host's real limit, other active children, the reviewer lifecycle, and
@@ -102,7 +137,7 @@ objective, requirement mapping, dependencies, owner and explicit model,
 workspace and baseline revision, owned paths, acceptance criteria, evidence,
 review, and the verification target. The remaining brief fields - non-goals,
 completion condition, and per-task time or budget limits - are part of the
-prompt Astra and the worker read; the validator does not pretend to check them.
+prompt the reviewer and the worker read; the validator does not pretend to check them.
 Full field list: [delegation protocol](references/protocol.md).
 
 ### Retrigger while waiting for subagents
@@ -121,7 +156,7 @@ cadence, and back off after unchanged checks. Continue useful independent work
 while children run, and handle completion events promptly without waiting for
 the timer. On every wake, reload the checkpoint and inspect current child
 status before acting. Collect new evidence, mark finished children done, route
-results to Astra, and dispatch newly ready work. Never duplicate a job or
+results to the reviewer, and dispatch newly ready work. Never duplicate a job or
 interrupt a healthy child merely because a timer fired. If work remains,
 rearm the one-shot timer or retain the existing heartbeat before yielding.
 Keep unchanged checks quiet; notify on meaningful progress, blockers, or a
@@ -144,27 +179,27 @@ cannot accept its own work or turn a worker's success claim into approval.
 
 An **important** change is verified by a worker other than its author. That is a
 normal delegated task with its own acceptance criteria and evidence, not
-automatically an Astra turn. A fresh Astra check is also warranted when risk
+automatically a reviewer turn. A fresh reviewer check is also warranted when risk
 justifies it: security, authorization, payments, tenancy, secrets, destructive
 migrations, production or shared infrastructure, or a material revision after
-acceptance. Routine tasks do not each need a fresh Astra pass on top of normal
+acceptance. Routine tasks do not each need a fresh reviewer pass on top of normal
 review.
 
-Astra owns acceptance and inspects the actual artifacts, checking
+The reviewer owns acceptance and inspects the actual artifacts, checking
 specification, correctness, coverage, risk, and interaction with other accepted
 work. Passing tests support review; they do not establish that the right
-behavior was implemented. Send Astra compact batches at dependency or
+behavior was implemented. Send the reviewer compact batches at dependency or
 integration boundaries: task ids, baseline and resulting hashes, changed paths,
 artifact locations, checks with outcomes, sources, and open issues. Keep raw
 evidence in files rather than forwarding huge logs, and keep a worker's claim
 distinct from independently observed evidence.
 
-Astra answers with one decision per task: `ACCEPT`, `REQUEST_CHANGES` (findings,
+The reviewer answers with one decision per task: `ACCEPT`, `REQUEST_CHANGES` (findings,
 locations, required verification), `REQUEST_RESEARCH` (the open question, why it
 matters, what evidence is needed), or `BLOCKED` (the exact unavailable
 dependency, permission, or user decision). Send consolidated findings back to
 the same worker where practical. After two failed correction rounds on one
-issue, have Astra diagnose the cause and choose a new approach within scope
+issue, have the reviewer diagnose the cause and choose a new approach within scope
 rather than repeating the loop or declaring success. Ask the user only for a
 genuinely unresolved decision or limit, and honour explicit budgets without
 silently raising them.
@@ -172,10 +207,10 @@ silently raising them.
 Acceptance applies to the inspected artifact version only. A later edit or
 material dependency change invalidates the affected acceptance and requires
 review. Before finishing, integrate accepted outputs in dependency order, run
-the combined checks, and send the resulting state to Astra for final acceptance.
+the combined checks, and send the resulting state to the reviewer for final acceptance.
 One worker owns integration, version, and history updates when these would
 otherwise collide. Commits, pushes, deployments, flashing, and other external
-actions keep the user's own authorization requirements; Astra review adds none.
+actions keep the user's own authorization requirements; reviewer acceptance adds none.
 
 ## 6. Close out
 
@@ -192,10 +227,10 @@ so it is marked done, and never interrupt healthy work for cleanup. Use
 children, pass the checkpoint to a replacement of the same verified model. Do
 not leave idle agents consuming capacity.
 
-New user instructions reach Astra and every affected worker before dependent
+New user instructions reach the reviewer and every affected worker before dependent
 work continues. Stop only the jobs the change makes unsafe or obsolete.
 
-Finish only after Astra accepts the final state and the required checks pass, or
+Finish only after the reviewer accepts the final state and the required checks pass, or
 clearly report the remaining blocker or user budget limit. Report the outcome,
 the evidence, the limitations, and whether actual model routing was verified. A
 requested model name or a static configuration check is not proof of the
@@ -203,7 +238,7 @@ provider that ran.
 
 ## References
 
-- [Delegation protocol](references/protocol.md): the Astra brief, the worker
+- [Delegation protocol](references/protocol.md): the reviewer brief, the worker
   instruction block, full handoff fields, capacity rules, and review packets.
 - [Ledger reference](references/ledger.md): schema, validator and scheduler
   commands, example, and what a ledger does not prove.

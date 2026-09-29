@@ -119,8 +119,8 @@
         }
       ],
       "review": {
-        "reviewer_actor": "astra-1",
-        "reviewer_model": "gpt-6-astra",
+        "reviewer_actor": "reviewer-1",
+        "reviewer_model": "<user-selected-reviewer-model>",
         "decision": "accept",
         "at": "2026-09-28T03:05:00Z",
         "independent": true,
@@ -167,8 +167,8 @@
         }
       ],
       "review": {
-        "reviewer_actor": "astra-1",
-        "reviewer_model": "gpt-6-astra",
+        "reviewer_actor": "reviewer-1",
+        "reviewer_model": "<user-selected-reviewer-model>",
         "decision": "accept",
         "at": "2026-09-28T03:12:00Z",
         "independent": true,
@@ -214,8 +214,8 @@
         }
       ],
       "review": {
-        "reviewer_actor": "astra-1",
-        "reviewer_model": "gpt-6-astra",
+        "reviewer_actor": "reviewer-1",
+        "reviewer_model": "<user-selected-reviewer-model>",
         "decision": "accept",
         "at": "2026-09-28T03:20:00Z",
         "independent": true,
