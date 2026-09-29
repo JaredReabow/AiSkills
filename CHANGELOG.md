@@ -2,6 +2,10 @@
 
 ## 2026-09-29
 
+- Added a public README explaining the team, reviewer selection, dynamic worker
+  counts, evidence, timers, and dependency boundaries; added an installation
+  guide covering Codex Router, DeepSeek, native route verification, skill
+  discovery paths, checks, updates, and troubleshooting.
 - Added `$parallelism <model> <effort>` reviewer selection, including linked
   mentions; repeating it during a task requests a switch without restarting work.
 - Reviewer model is selectable at task start, defaults to Sol (`gpt-6-sol`)

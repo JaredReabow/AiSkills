@@ -56,3 +56,9 @@
   `$parallelism astra low`, including clickable skill mentions. The suffix selects
   the reviewer only; repeated unchanged selections reuse it and changed selections
   request the existing task's reviewer handoff.
+- 2026-09-29: Added the requested public documentation for AiSkills: a workflow
+  overview and installation guide covering Codex, Codex Router, DeepSeek,
+  reviewer selection, useful concurrency, timers, local validation, updates,
+  and troubleshooting. Distinguished configured native child routes from live
+  execution proof and documented mixed-model compatibility limits. Runtime
+  instructions, helper behavior, provider settings, and model bindings unchanged.
