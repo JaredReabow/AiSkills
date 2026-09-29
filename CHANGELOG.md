@@ -2,6 +2,8 @@
 
 ## 2026-09-29
 
+- Added `$parallelism <model> <effort>` reviewer selection, including linked
+  mentions; repeating it during a task requests a switch without restarting work.
 - Reviewer model is selectable at task start, defaults to Sol (`gpt-6-sol`)
   with medium reasoning, and can change during work through an evidence handoff.
 - Preserve historical review attribution, ignore superseded approvals, and keep

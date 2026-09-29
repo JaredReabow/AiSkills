@@ -35,6 +35,23 @@ overrides this default. Any model with an available native subagent route may
 fill the reviewer role, including the same model as the main agent or workers;
 actor separation still applies.
 
+### Reviewer selection shorthand
+
+Interpret `$parallelism <model> <effort>` as the reviewer selection, including
+when the skill mention is a clickable link followed by plain text. For example:
+
+- `$parallelism sol medium` selects `gpt-6-sol` with `medium` reasoning.
+- `$parallelism astra low` selects `gpt-6-astra` with `low` reasoning.
+- `$parallelism` uses the default `gpt-6-sol` with `medium` reasoning.
+
+These arguments configure only the reviewer, not the main agent or DeepSeek
+workers. Resolve other model names against the live native subagent catalog;
+ask if a name is ambiguous or its requested effort is unsupported. Treat quoted
+examples as examples, not commands. Repeating this shorthand as an instruction
+during an active task requests the reviewer handoff below; it does not restart
+the task. If the requested model and effort already match, keep the current
+reviewer rather than spawning a duplicate.
+
 Check the live tool schema and model choices. Record the selected or defaulted
 reviewer model id, reasoning effort, reviewer actor id, and selection time in
 the checkpoint. For an explicitly selected alternative model with no specified

@@ -1,4 +1,4 @@
 interface:
   display_name: "Parallelism"
   short_description: "Chosen reviewer or Sol medium, parallel DeepSeek workers"
-  default_prompt: "Use $parallelism for this task: preserve my selected main model, use my chosen reviewer model to plan and accept the work (default to Sol with medium reasoning), allow me to change the reviewer during the task, and run independent DeepSeek workers in parallel."
+  default_prompt: "Use $parallelism sol medium for this task: preserve my selected main model, use my chosen reviewer model to plan and accept the work (default to Sol with medium reasoning), allow me to change the reviewer during the task, and run independent DeepSeek workers in parallel."

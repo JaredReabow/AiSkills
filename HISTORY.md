@@ -52,3 +52,7 @@
 - 2026-09-29: User amendment sets the default reviewer to Sol (`gpt-6-sol`)
   with medium reasoning. Explicit reviewer choices override the default; model
   and reasoning effort can be changed during work through the same handoff.
+- 2026-09-29: Added the user's shorthand `$parallelism sol medium` and
+  `$parallelism astra low`, including clickable skill mentions. The suffix selects
+  the reviewer only; repeated unchanged selections reuse it and changed selections
+  request the existing task's reviewer handoff.

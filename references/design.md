@@ -11,13 +11,14 @@ in `SKILL.md`; the request fields and review packets live in
 Select any main model that supports Codex's agent tools, then invoke:
 
 ```text
-Use $parallelism to implement [objective]. Keep my selected main model.
-Use [reviewer model] to plan and review, and request parallel DeepSeek workers
-for independent tasks.
+Use $parallelism sol medium to implement [objective].
+Keep my selected main model and use parallel DeepSeek workers.
 ```
 
-To switch later, say `Change the reviewer to [new model] for the rest of this
-task.` You can also specify a reasoning effort. With no reviewer selection,
+Use `$parallelism astra low` for Astra with low reasoning. A clickable skill
+mention followed by `sol medium` or `astra low` has the same meaning. To switch
+later, repeat the shorthand with the new model/effort, or say `Change the
+reviewer to [new model] for the rest of this task.` With no reviewer selection,
 use Sol (`gpt-6-sol`) at medium reasoning. A switch hands off evidence and open findings
 without changing the main model, worker models, or earlier attribution.
 
@@ -125,6 +126,8 @@ Passing evidence per scenario:
 | Main and reviewer use the same model | A separate reviewer child reviews artifacts; the main agent cannot self-approve. |
 | User changes scope during work | The change reaches the reviewer, the contract is updated, and affected jobs are steered. |
 | Reviewer unspecified | Use Sol (`gpt-6-sol`) with medium reasoning, verify the route, and record the default without asking unnecessarily. |
+| Linked skill mention followed by sol medium or astra low | Resolve the suffix to reviewer model and effort only; preserve main and worker models. |
+| Shorthand repeated with unchanged model and effort | Keep the existing reviewer and task; do not create a duplicate. |
 | User switches reviewer during a pending review | Verify the new route, hand off checkpoint/evidence, ignore late outgoing approvals, and preserve healthy workers. |
 | Replacement reviewer unavailable | Report the limitation; hold new acceptance and ask for a supported choice without a silent fallback. |
 | Previously accepted work after a switch | Keep original attribution and unchanged artifact acceptance; the new reviewer owns final acceptance and explicitly reopened findings. |
