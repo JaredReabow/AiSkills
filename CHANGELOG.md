@@ -2,8 +2,8 @@
 
 ## 2026-09-29
 
-- Reviewer model is chosen by the user at task start, with no implicit Astra
-  default, and can change during work through an explicit evidence handoff.
+- Reviewer model is selectable at task start, defaults to Sol (`gpt-6-sol`)
+  with medium reasoning, and can change during work through an evidence handoff.
 - Preserve historical review attribution, ignore superseded approvals, and keep
   independent approved workers running during reviewer replacement.
 - Updated invocation metadata, protocol, ledger examples and evaluation scenarios;

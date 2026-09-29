@@ -1,6 +1,6 @@
 ---
 name: parallelism
-description: Coordinate substantial work with the user's selected main model, a user-selected planner and acceptance reviewer, and parallel DeepSeek workers. Use when the user wants delegated implementation with independent review and a reviewer model they can change during the task. The reviewer requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
+description: Coordinate substantial work with the user's selected main model, a selectable planner and acceptance reviewer (Sol medium by default), and parallel DeepSeek workers. Use when the user wants delegated implementation with independent review and a reviewer model they can change during the task. The reviewer requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
 ---
 
 # Parallelism
@@ -27,23 +27,25 @@ constraints, existing approvals, the workspace baseline including uncommitted an
 untracked work, and any user time, spending, or concurrency limit. Reuse an
 existing plan.
 
-At the start of each task, use the reviewer model the user explicitly selected
-for that task. If none was supplied, ask which available model should plan and
-review before dispatching the reviewer or work that needs its approval. Do not
-silently default to Astra, the main model, or a prior task's selection. Read-only
-baseline collection can continue while waiting for the answer. Any model with
-an available native subagent route may fill the reviewer role, including the
-same model as the main agent or workers; actor separation still applies.
+At the start of each task, use the reviewer model and reasoning effort the user
+selected for that task. When none is supplied, default to **Sol with medium
+reasoning**: `model: gpt-6-sol`, `reasoning_effort: medium`. Do not ask for a
+reviewer choice just because the user omitted it. An explicit selection always
+overrides this default. Any model with an available native subagent route may
+fill the reviewer role, including the same model as the main agent or workers;
+actor separation still applies.
 
-Check the live tool schema and model choices. Record the user's choice, resolved
-reviewer model id, reviewer actor id, and selection time in the checkpoint.
-Workers still use `deepseek/deepseek-v4.1-flash` unless the user selects another
-available DeepSeek model. Verify the main model from session metadata: global
-defaults and model self-identification do not prove it. Use explicit child model
-selection or a verified installed role whose binding matches the requested
-model and whose instructions permit planning and review. If the route is missing
-or rejected, report it and ask for another
-selection; do not silently substitute or change provider settings.
+Check the live tool schema and model choices. Record the selected or defaulted
+reviewer model id, reasoning effort, reviewer actor id, and selection time in
+the checkpoint. For an explicitly selected alternative model with no specified
+effort, use its supported default and state it; do not pass an unsupported
+`medium` setting. Workers still use `deepseek/deepseek-v4.1-flash` unless the user
+selects another available DeepSeek model. Verify the main model from session
+metadata: global defaults and model self-identification do not prove it. Use
+explicit child model selection or a verified installed role whose binding
+matches the requested model and whose instructions permit planning and review.
+If the selected route or effort is missing or rejected, report it and ask for a
+supported choice; do not silently substitute or change provider settings.
 
 Send the reviewer the **original request and every amendment verbatim**, plus the
 constraints, baseline, artifact paths, capacity, and the reviewer brief in
@@ -54,16 +56,16 @@ scope, shared contracts, or acceptance criteria go back to the reviewer first.
 
 ### Change the reviewer during work
 
-The user can select a different reviewer at any time. Record the request
+The user can select a different reviewer model or reasoning effort at any time. Record the request
 verbatim as an objective amendment and add a dated handoff to the checkpoint:
-outgoing/incoming actor and model, accepted artifact versions, pending reviews,
+outgoing/incoming actor, model and effort, accepted artifact versions, pending reviews,
 open findings, running jobs, and the next decision. Verify the new route before
 claiming a switch succeeded. If unavailable, hold new acceptance decisions and
 ask for a supported choice; existing independent approved work may continue.
 
 Stop assigning reviews to the outgoing actor and mark its authority superseded
 at the handoff boundary. Finish or stop only its review turn as needed, clean up
-its slot, and spawn a separate reviewer using the newly selected model. Never
+its slot, and spawn a separate reviewer using the newly selected model and effort. Never
 pretend that resuming the old actor changes its model. Give the new reviewer the
 original request and amendments, ledger, contracts, evidence, and open findings.
 It must acknowledge the handoff and inspect evidence before deciding; ignore

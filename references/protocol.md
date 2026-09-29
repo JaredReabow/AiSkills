@@ -81,16 +81,16 @@ capacity, the artifact directory for evidence, and the user's limits:
 
 Read the current schema before calls. This host exposed these shapes when the
 skill was created; names and available routes must be checked in later sessions.
-A clean context requires supplying all relevant constraints. Replace the model
-placeholder below with the user-selected route and choose a reasoning effort
-that route supports. The placeholder is not a callable model id.
+A clean context requires supplying all relevant constraints. The example below
+uses the default reviewer, Sol with medium reasoning. Replace its model and
+effort with the user's explicit choice after checking the live tool schema.
 
 ```json
 {
   "task_name": "selected_reviewer",
   "agent_type": "default",
-  "model": "<user-selected-reviewer-model>",
-  "reasoning_effort": "high",
+  "model": "gpt-6-sol",
+  "reasoning_effort": "medium",
   "fork_turns": "none",
   "message": "Full task contract, baseline, constraints, and the reviewer brief"
 }

@@ -120,7 +120,7 @@
       ],
       "review": {
         "reviewer_actor": "reviewer-1",
-        "reviewer_model": "<user-selected-reviewer-model>",
+        "reviewer_model": "gpt-6-sol",
         "decision": "accept",
         "at": "2026-09-28T03:05:00Z",
         "independent": true,
@@ -168,7 +168,7 @@
       ],
       "review": {
         "reviewer_actor": "reviewer-1",
-        "reviewer_model": "<user-selected-reviewer-model>",
+        "reviewer_model": "gpt-6-sol",
         "decision": "accept",
         "at": "2026-09-28T03:12:00Z",
         "independent": true,
@@ -215,7 +215,7 @@
       ],
       "review": {
         "reviewer_actor": "reviewer-1",
-        "reviewer_model": "<user-selected-reviewer-model>",
+        "reviewer_model": "gpt-6-sol",
         "decision": "accept",
         "at": "2026-09-28T03:20:00Z",
         "independent": true,
@@ -235,6 +235,13 @@
     "note": "Missing values stay null; nothing is estimated."
   },
   "checkpoint": {
+    "reviewer": {
+      "actor": "reviewer-1",
+      "model": "gpt-6-sol",
+      "reasoning_effort": "medium",
+      "selection": "skill default",
+      "selected_at": "2026-09-29T00:00:00Z"
+    },
     "next": "None; the example task is complete.",
     "open_findings": []
   }

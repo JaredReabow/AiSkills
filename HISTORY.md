@@ -49,3 +49,6 @@
   Added mid-task replacement, checkpoint/evidence handoff, historical attribution,
   and superseded-review handling. Updated metadata, references and examples;
   retained separate review actors, DeepSeek workers and timer-event continuation.
+- 2026-09-29: User amendment sets the default reviewer to Sol (`gpt-6-sol`)
+  with medium reasoning. Explicit reviewer choices override the default; model
+  and reasoning effort can be changed during work through the same handoff.

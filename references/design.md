@@ -17,8 +17,8 @@ for independent tasks.
 ```
 
 To switch later, say `Change the reviewer to [new model] for the rest of this
-task.` If no initial reviewer was specified, the main agent asks before review
-or reviewer-dependent dispatch. A switch hands off evidence and open findings
+task.` You can also specify a reasoning effort. With no reviewer selection,
+use Sol (`gpt-6-sol`) at medium reasoning. A switch hands off evidence and open findings
 without changing the main model, worker models, or earlier attribution.
 
 Optionally add a worker cap, budget, or restriction such as plan-only. Without a
@@ -124,7 +124,7 @@ Passing evidence per scenario:
 | Main model is not DeepSeek | The selected model is preserved; explicit routes still select the chosen reviewer and DeepSeek workers. |
 | Main and reviewer use the same model | A separate reviewer child reviews artifacts; the main agent cannot self-approve. |
 | User changes scope during work | The change reaches the reviewer, the contract is updated, and affected jobs are steered. |
-| Reviewer unspecified | Ask for the reviewer choice; collect independent baseline information meanwhile. |
+| Reviewer unspecified | Use Sol (`gpt-6-sol`) with medium reasoning, verify the route, and record the default without asking unnecessarily. |
 | User switches reviewer during a pending review | Verify the new route, hand off checkpoint/evidence, ignore late outgoing approvals, and preserve healthy workers. |
 | Replacement reviewer unavailable | Report the limitation; hold new acceptance and ask for a supported choice without a silent fallback. |
 | Previously accepted work after a switch | Keep original attribution and unchanged artifact acceptance; the new reviewer owns final acceptance and explicitly reopened findings. |

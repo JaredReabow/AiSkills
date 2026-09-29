@@ -39,7 +39,7 @@ are declarations. The checker does not authenticate routing, re-run anything, or
 treat a log as proof of execution. It verifies that declared artifact hashes
 match the bytes actually on disk. Treat the rest as claims that the reviewer inspects.
 
-Record the active reviewer actor/model and selection time in `checkpoint`.
+Record the active reviewer actor/model, reasoning effort and selection time in `checkpoint`.
 Record a user-requested switch in `objective.amendments` and append its handoff
 to the checkpoint. Each new `review` records `reviewer_actor` and
 `reviewer_model`; the schema permits legacy missing model fields, but the skill
@@ -48,8 +48,9 @@ checkpoint-linked evidence when replacing a task review. The checker accepts
 arbitrary model strings and historical reviewers; it does not authenticate
 routes, enforce the active reviewer, or execute handoffs.
 
-The model placeholders in the example ledger are illustrative. Replace them
-with verified user-selected model ids when using it for real work.
+The example ledger uses the default reviewer model, `gpt-6-sol`. Its medium
+reasoning effort belongs in the checkpoint, since review records have no effort
+field. Replace the model and checkpoint effort when the user selects another route.
 
 ## Schema
 
