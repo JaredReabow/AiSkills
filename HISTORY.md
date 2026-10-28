@@ -71,3 +71,5 @@
   projection. No model/provider settings or remote M1 files changed.
 
 - 2026-09-29: Removed generated Python test bytecode from the published Council package and ignored Python caches. No skill or checker behavior changed.
+
+- 2026-10-29: Updated Parallelism and The Council to use Sol 6.1 (`gpt-6.1-sol`) for default reviewer seats and in place of Astra examples and fixtures. Updated invocation metadata, references, templates and test actors; retained medium reasoning defaults and explicit user model selection.

@@ -15,11 +15,11 @@ Use $parallelism sol medium to implement [objective].
 Keep my selected main model and use parallel DeepSeek workers.
 ```
 
-Use `$parallelism astra low` for Astra with low reasoning. A clickable skill
-mention followed by `sol medium` or `astra low` has the same meaning. To switch
+Use `$parallelism sol low` for Sol 6.1 with low reasoning. A clickable skill
+mention followed by `sol medium` or `sol low` has the same meaning. To switch
 later, repeat the shorthand with the new model/effort, or say `Change the
 reviewer to [new model] for the rest of this task.` With no reviewer selection,
-use Sol (`gpt-6-sol`) at medium reasoning. A switch hands off evidence and open findings
+use Sol 6.1 (`gpt-6.1-sol`) at medium reasoning. A switch hands off evidence and open findings
 without changing the main model, worker models, or earlier attribution.
 
 Optionally add a worker cap, budget, or restriction such as plan-only. Without a
@@ -125,8 +125,8 @@ Passing evidence per scenario:
 | Main model is not DeepSeek | The selected model is preserved; explicit routes still select the chosen reviewer and DeepSeek workers. |
 | Main and reviewer use the same model | A separate reviewer child reviews artifacts; the main agent cannot self-approve. |
 | User changes scope during work | The change reaches the reviewer, the contract is updated, and affected jobs are steered. |
-| Reviewer unspecified | Use Sol (`gpt-6-sol`) with medium reasoning, verify the route, and record the default without asking unnecessarily. |
-| Linked skill mention followed by sol medium or astra low | Resolve the suffix to reviewer model and effort only; preserve main and worker models. |
+| Reviewer unspecified | Use Sol 6.1 (`gpt-6.1-sol`) with medium reasoning, verify the route, and record the default without asking unnecessarily. |
+| Linked skill mention followed by sol medium or sol low | Resolve the suffix to reviewer model and effort only; preserve main and worker models. |
 | Shorthand repeated with unchanged model and effort | Keep the existing reviewer and task; do not create a duplicate. |
 | User switches reviewer during a pending review | Verify the new route, hand off checkpoint/evidence, ignore late outgoing approvals, and preserve healthy workers. |
 | Replacement reviewer unavailable | Report the limitation; hold new acceptance and ask for a supported choice without a silent fallback. |

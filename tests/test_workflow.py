@@ -280,7 +280,7 @@ class AcceptanceRules(support.LedgerCase):
         third["owner"] = {"actor": "worker-c", "model": "m"}
         third["resources"] = []
         third["review"] = {
-            "reviewer_actor": "astra-1",
+            "reviewer_actor": "sol61-1",
             "decision": "accept",
             "verified_hashes": {},
         }
@@ -331,7 +331,7 @@ class AcceptanceRules(support.LedgerCase):
             }
         ]
         third["review"] = {
-            "reviewer_actor": "astra-1",
+            "reviewer_actor": "sol61-1",
             "decision": "accept",
             "artifact_free": True,
             "verified_hashes": {},
@@ -377,7 +377,7 @@ class AcceptanceRules(support.LedgerCase):
             ],
         )
         support.task(document, "T5")["review"] = {
-            "reviewer_actor": "astra-1",
+            "reviewer_actor": "sol61-1",
             "decision": "accept",
             "artifact_free": True,
             "verified_hashes": {},
@@ -417,7 +417,7 @@ class FinalValidation(support.LedgerCase):
             }
         ]
         third["review"] = {
-            "reviewer_actor": "astra-1",
+            "reviewer_actor": "sol61-1",
             "decision": "accept",
             "verified_hashes": {"art-b": hash_b},
         }
@@ -512,7 +512,7 @@ def two_module_ledger(case: support.LedgerCase) -> dict:
         }
     ]
     third["review"] = {
-        "reviewer_actor": "astra-1",
+        "reviewer_actor": "sol61-1",
         "decision": "accept",
         "independent": True,
         "verified_hashes": {"art-c": hash_c},
@@ -586,7 +586,7 @@ class VerificationTargets(support.LedgerCase):
             entry = support.task(document, task_id)
             entry["state"] = "accepted"
             entry["review"] = {
-                "reviewer_actor": "astra-1",
+                "reviewer_actor": "sol61-1",
                 "decision": "accept",
                 "independent": True,
                 "verified_hashes": {
@@ -675,7 +675,7 @@ class BackpressureDeadlock(support.LedgerCase):
             }
         ]
         verifier["review"] = {
-            "reviewer_actor": "astra-1",
+            "reviewer_actor": "sol61-1",
             "decision": "accept",
             "verified_hashes": {
                 "art-a": document["artifacts"][0]["sha256"],
@@ -686,7 +686,7 @@ class BackpressureDeadlock(support.LedgerCase):
             entry = support.task(document, task_id)
             entry["state"] = "accepted"
             entry["review"] = {
-                "reviewer_actor": "astra-1",
+                "reviewer_actor": "sol61-1",
                 "decision": "accept",
                 "verified_hashes": {
                     "art-a": document["artifacts"][0]["sha256"],
@@ -941,7 +941,7 @@ class OwnershipConflicts(support.LedgerCase):
 class EvidenceAndReview(support.LedgerCase):
     """Acceptance must rest on real, current, independently reviewed evidence."""
 
-    def test_user_selected_reviewer_models_are_not_restricted_to_astra(self):
+    def test_user_selected_reviewer_models_are_not_restricted_to_one_model(self):
         """Routing names are declarations; independence is between actors."""
         for model in ("custom/reviewer", "deepseek/deepseek-v4.1-flash"):
             with self.subTest(model=model):
@@ -1308,7 +1308,7 @@ class Scheduler(support.LedgerCase):
         first["state"] = "needs_changes"
         first["owner"] = {"actor": "worker-a", "model": "m"}
         first["review"] = {
-            "reviewer_actor": "astra-1",
+            "reviewer_actor": "sol61-1",
             "decision": "request_changes",
             "notes": "tighten the exit code path",
         }
@@ -1401,7 +1401,7 @@ class Scheduler(support.LedgerCase):
         document["limits"]["max_total_workers"] = 1
         second = support.task(document, "T2")
         second["state"] = "needs_changes"
-        second["review"] = {"reviewer_actor": "astra-1", "decision": "request_changes"}
+        second["review"] = {"reviewer_actor": "sol61-1", "decision": "request_changes"}
         result = self.schedule(document, host_capacity=6)
         self.assertTrue(result["ok"], result.get("errors"))
         kinds = {item["task_id"]: item["kind"] for item in result["suggestions"]}

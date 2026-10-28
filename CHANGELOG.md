@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-29
+
+- Use Sol 6.1 (`gpt-6.1-sol`) for default reviewers and replace Astra selections in current examples and fixtures. Update skill metadata, references, and templates while preserving explicit model overrides.
+
 ## 2026-09-29
 
 - Added The Council as an optional companion review skill with one to three

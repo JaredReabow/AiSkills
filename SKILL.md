@@ -1,6 +1,6 @@
 ---
 name: parallelism
-description: Coordinate substantial work with the user's selected main model, a selectable planner/reviewer (Sol medium by default), and parallel DeepSeek workers. Optionally use The Council for collective acceptance when requested. The planner requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
+description: Coordinate substantial work with the user's selected main model, a selectable planner/reviewer (Sol 6.1 medium by default), and parallel DeepSeek workers. Optionally use The Council for collective acceptance when requested. The planner requests workers from the main agent; all children are siblings. Skip ordinary single-agent tasks and other orchestration workflows.
 ---
 
 # Parallelism
@@ -23,8 +23,8 @@ concurrency settings while running it.
 ## Optional Council review
 
 Without an explicit Council request, follow the single-reviewer workflow below
-unchanged. `$parallelism` defaults to Sol medium; `$parallelism astra low`
-selects one Astra-low planner/reviewer. The Council is not a dependency in this
+unchanged. `$parallelism` defaults to Sol 6.1 medium; `$parallelism sol low`
+selects one Sol 6.1-low planner/reviewer. The Council is not a dependency in this
 mode, and its absence must not prevent ordinary work.
 
 When the user requests `$parallelism $the-council`, or asks to bring The Council
@@ -42,8 +42,8 @@ In council mode, the following rules override only single-reviewer acceptance:
 - Use one lead planner, occupying **one of at most three council seats**. With
   an explicit council list, its first member is lead unless the user chooses
   another listed member. With no list, the current Parallelism reviewer becomes
-  lead and two Sol-medium reviewers fill the remaining seats. At a fresh default
-  start all three are Sol medium. If the user separately specifies incompatible
+  lead and two Sol 6.1-medium reviewers fill the remaining seats. At a fresh default
+  start all three are Sol 6.1 medium. If the user separately specifies incompatible
   lead and panel selections, clarify rather than adding a fourth seat.
 - Text after `$parallelism` selects its lead planner; a comma-separated model
   and effort list after `$the-council` selects that panel. Linked mentions behave
@@ -79,8 +79,8 @@ untracked work, and any user time, spending, or concurrency limit. Reuse an
 existing plan.
 
 At the start of each task, use the reviewer model and reasoning effort the user
-selected for that task. When none is supplied, default to **Sol with medium
-reasoning**: `model: gpt-6-sol`, `reasoning_effort: medium`. Do not ask for a
+selected for that task. When none is supplied, default to **Sol 6.1 with medium
+reasoning**: `model: gpt-6.1-sol`, `reasoning_effort: medium`. Do not ask for a
 reviewer choice just because the user omitted it. An explicit selection always
 overrides this default. Any model with an available native subagent route may
 fill the reviewer role, including the same model as the main agent or workers;
@@ -91,9 +91,9 @@ actor separation still applies.
 Interpret `$parallelism <model> <effort>` as the reviewer selection, including
 when the skill mention is a clickable link followed by plain text. For example:
 
-- `$parallelism sol medium` selects `gpt-6-sol` with `medium` reasoning.
-- `$parallelism astra low` selects `gpt-6-astra` with `low` reasoning.
-- `$parallelism` uses the default `gpt-6-sol` with `medium` reasoning.
+- `$parallelism sol medium` selects `gpt-6.1-sol` with `medium` reasoning.
+- `$parallelism sol low` selects `gpt-6.1-sol` with `low` reasoning.
+- `$parallelism` uses the default `gpt-6.1-sol` with `medium` reasoning.
 
 These arguments configure only the reviewer, not the main agent or DeepSeek
 workers. Resolve other model names against the live native subagent catalog;

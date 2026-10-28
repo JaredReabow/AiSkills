@@ -115,8 +115,8 @@ def base_ledger(workspace: Path) -> dict:
                     }
                 ],
                 "review": {
-                    "reviewer_actor": "astra-1",
-                    "reviewer_model": "gpt-6-astra",
+                    "reviewer_actor": "sol61-1",
+                    "reviewer_model": "gpt-6.1-sol",
                     "decision": "accept",
                     "at": "2026-09-28T00:30:00Z",
                     "independent": True,
@@ -156,8 +156,8 @@ def base_ledger(workspace: Path) -> dict:
                     }
                 ],
                 "review": {
-                    "reviewer_actor": "astra-1",
-                    "reviewer_model": "gpt-6-astra",
+                    "reviewer_actor": "sol61-1",
+                    "reviewer_model": "gpt-6.1-sol",
                     "decision": "accept",
                     "at": "2026-09-28T00:45:00Z",
                     "independent": True,

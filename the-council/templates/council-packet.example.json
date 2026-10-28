@@ -63,19 +63,19 @@
   "panel": [
     {
       "actor": "rev-lead",
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "reasoning_effort": "medium",
       "role": "lead"
     },
     {
       "actor": "rev-2",
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "reasoning_effort": "medium",
       "role": "reviewer"
     },
     {
       "actor": "rev-3",
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "reasoning_effort": "medium",
       "role": "reviewer"
     }

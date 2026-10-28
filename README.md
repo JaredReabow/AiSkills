@@ -24,13 +24,13 @@ see [Council installation](docs/INSTALLATION.md#install-the-optional-council-ski
 | Role | Default model | Responsibility |
 | --- | --- | --- |
 | Main agent | Whichever model you selected in Codex | Owns the task, talks to you, schedules work, creates all children, and maintains the checkpoint. |
-| Planner and acceptance reviewer | Sol, medium reasoning (`gpt-6-sol`) | Approves the plan, identifies useful worker tasks, inspects evidence, and decides what needs correction or research. |
+| Planner and acceptance reviewer | Sol 6.1, medium reasoning (`gpt-6.1-sol`) | Approves the plan, identifies useful worker tasks, inspects evidence, and decides what needs correction or research. |
 | Workers | DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash`) | Perform bounded research, implementation, verification, or integration with explicit ownership. |
 
 ```mermaid
 flowchart TD
     U[You] --> M[Main agent: your selected model]
-    M --> R[Reviewer: Sol medium by default]
+    M --> R[Reviewer: Sol 6.1 medium by default]
     R -->|Plan, worker requests, review decisions| M
     M --> W1[DeepSeek worker: task A]
     M --> W2[DeepSeek worker: task B]
@@ -86,21 +86,20 @@ Investigate the failing tests, fix the cause, and review the changes.
 ```
 
 ```text
-$parallelism astra low
+$parallelism sol low
 Build the new API with independent verification.
 ```
 
 | Invocation | Reviewer selection |
 | --- | --- |
-| `$parallelism` | Sol, medium reasoning |
-| `$parallelism sol medium` | Sol, medium reasoning |
-| `$parallelism astra low` | Astra, low reasoning |
+| `$parallelism` | Sol 6.1, medium reasoning |
+| `$parallelism sol medium` | Sol 6.1, medium reasoning |
+| `$parallelism sol low` | Sol 6.1, low reasoning |
 | `$parallelism <model> <effort>` | Another model and effort supported by the host's native subagent tools |
 
 The same suffix works after a clickable Parallelism skill mention in Codex.
 These arguments select **the reviewer only**. They do not switch your main model
-or the DeepSeek workers. `sol` resolves to `gpt-6-sol` and `astra` to
-`gpt-6-astra`; those exact routes must be available in your environment.
+or the DeepSeek workers. `sol` resolves to `gpt-6.1-sol`; that exact route must be available in your environment.
 
 Repeat the shorthand during work to request a reviewer change. The main agent
 hands the replacement reviewer the original request, amendments, evidence,
@@ -113,21 +112,21 @@ substituted.
 ## Optional review by The Council
 
 Parallelism without The Council keeps its existing single-reviewer workflow and
-Sol-medium default. The Council is a separate, optional review skill; requesting
+Sol 6.1-medium default. The Council is a separate, optional review skill; requesting
 it replaces single-person acceptance with a panel of one to three reviewers.
 
 | Invocation | Review behavior |
 | --- | --- |
-| `$parallelism` | One Sol-medium planner/reviewer, as before. |
-| `$parallelism astra low` | One Astra-low planner/reviewer, as before. |
-| `$parallelism $the-council` | Three Sol-medium reviewers at a fresh default start. |
-| `$parallelism $the-council sol medium, astra low, deepseek high` | Explicit panel; first member leads planning unless you choose another listed member. |
+| `$parallelism` | One Sol 6.1-medium planner/reviewer, as before. |
+| `$parallelism sol low` | One Sol 6.1-low planner/reviewer, as before. |
+| `$parallelism $the-council` | Three Sol 6.1-medium reviewers at a fresh default start. |
+| `$parallelism $the-council sol medium, sol low, deepseek high` | Explicit panel; first member leads planning unless you choose another listed member. |
 | `$the-council sol medium, sol medium` | Standalone review with two distinct actors. It does not authorize implementation changes. |
 
 The main agent still owns workers, task state and the wake-up timer. One council
 member leads planning; there is no fourth lead reviewer. If you bring the council
 into existing Parallelism work without specifying its panel, the current reviewer
-becomes lead and two Sol-medium members join. Explicit lists select the whole
+becomes lead and two Sol 6.1-medium members join. Explicit lists select the whole
 panel. Model aliases are checked against the host's actual available routes.
 
 Every member receives the same frozen task, requirements and artifact evidence.

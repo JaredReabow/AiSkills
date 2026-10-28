@@ -158,19 +158,19 @@ def base_packet(artifacts: list | None = None) -> dict:
         "panel": [
             {
                 "actor": "rev-lead",
-                "model": "gpt-6-sol",
+                "model": "gpt-6.1-sol",
                 "reasoning_effort": "medium",
                 "role": "lead",
             },
             {
                 "actor": "rev-2",
-                "model": "gpt-6-sol",
+                "model": "gpt-6.1-sol",
                 "reasoning_effort": "medium",
                 "role": "reviewer",
             },
             {
                 "actor": "rev-3",
-                "model": "gpt-6-sol",
+                "model": "gpt-6.1-sol",
                 "reasoning_effort": "medium",
                 "role": "reviewer",
             },
@@ -299,7 +299,7 @@ def single_reviewer_packet(artifacts: list | None = None) -> dict:
     document["panel"] = [
         {
             "actor": "rev-solo",
-            "model": "gpt-6-sol",
+            "model": "gpt-6.1-sol",
             "reasoning_effort": "medium",
             "role": "lead",
         }

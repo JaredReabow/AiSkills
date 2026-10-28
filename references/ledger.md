@@ -48,7 +48,7 @@ checkpoint-linked evidence when replacing a task review. The checker accepts
 arbitrary model strings and historical reviewers; it does not authenticate
 routes, enforce the active reviewer, or execute handoffs.
 
-The example ledger uses the default reviewer model, `gpt-6-sol`. Its medium
+The example ledger uses the default reviewer model, `gpt-6.1-sol`. Its medium
 reasoning effort belongs in the checkpoint, since review records have no effort
 field. Replace the model and checkpoint effort when the user selects another route.
 

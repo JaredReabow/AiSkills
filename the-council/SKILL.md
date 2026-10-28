@@ -43,13 +43,13 @@ their reasoning efforts. Verify each requested model and effort against the live
 native subagent catalog before claiming the seat exists. If a route is missing or
 rejected, say so and ask for a supported choice; never substitute silently.
 
-- Standalone `$the-council`: **three reviewers on Sol (`gpt-6-sol`) at medium
+- Standalone `$the-council`: **three reviewers on Sol 6.1 (`gpt-6.1-sol`) at medium
   reasoning** unless the user selects otherwise.
 - `$parallelism $the-council`: reuse the Parallelism reviewer already selected
-  for the task as the lead planner, and fill the remaining seats with Sol at
+  for the task as the lead planner, and fill the remaining seats with Sol 6.1 at
   medium reasoning. Parallelism keeps its current single-reviewer behaviour when
   the Council is not requested.
-- `$parallelism $the-council sol medium, astra low, deepseek high`: an explicit
+- `$parallelism $the-council sol medium, sol low, deepseek high`: an explicit
   list. The first member is the lead planner unless the user names a different
   member as lead.
 

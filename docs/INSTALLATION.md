@@ -1,7 +1,7 @@
 # Install Parallelism
 
 This guide installs the skill and explains the separate setup needed for its
-models. The default team is your selected main model, a Sol reviewer with medium
+models. The default team is your selected main model, a Sol 6.1 reviewer with medium
 reasoning, and DeepSeek V4.1 Flash workers. All must be usable through the host's
 native subagent tools. Installing the Markdown files alone does not enable
 model routes.
@@ -248,7 +248,7 @@ models require those integrations.
 Use `$parallelism $the-council` for collective acceptance during a build, or
 `$the-council` to review existing work. Supply one to three comma-separated
 model/effort entries after the Council mention to select its panel. Plain
-`$parallelism` and `$parallelism astra low` remain single-reviewer invocations.
+`$parallelism` and `$parallelism sol low` remain single-reviewer invocations.
 
 ### Validate the installation
 
@@ -317,7 +317,7 @@ one while children are outstanding and cancels or pauses it when finished.
 Otherwise, expect bounded native waits and an explicit limitation. Installing
 this skill does not add a timer service.
 
-To switch reviewers, send `$parallelism astra low` during the task. Expect a new
+To switch reviewers, send `$parallelism sol low` during the task. Expect a new
 reviewer with an evidence handoff; existing independent workers can continue.
 
 ### Make it a project preference
@@ -328,7 +328,7 @@ to that project's `AGENTS.md`:
 
 ```text
 Use the parallelism skill for substantial work that benefits from independent
-workers and review. Default the reviewer to Sol medium unless I select another
+workers and review. Default the reviewer to Sol 6.1 medium unless I select another
 model or effort. Skip trivial single-agent work and respect host capabilities.
 ```
 
@@ -366,7 +366,7 @@ nested skills may still list the bundled source.
 | Symptom | Check or next action |
 | --- | --- |
 | `$parallelism` is missing | Confirm the discovery directory and `parallelism/SKILL.md` layout, remove duplicate discovery copies, and restart Codex. |
-| Sol or Astra is unavailable | Inspect the native subagent catalog. Select an available reviewer explicitly; installing files cannot grant model access. |
+| Sol 6.1 is unavailable | Inspect the native subagent catalog. Select an available reviewer explicitly; installing files cannot grant model access. |
 | DeepSeek is missing | Check provider enablement, credentials, selected models, catalog publication, and restart. |
 | DeepSeek is selectable but cannot spawn | Inspect `subagents explain`, the generated role, and the host's native tools. A picker entry is not delegation proof. |
 | Every child uses the main model | The active integration may pin child routing. The requested mixed-model team is unavailable until that restriction is resolved. |

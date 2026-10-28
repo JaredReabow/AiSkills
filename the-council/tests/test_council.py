@@ -365,7 +365,7 @@ class PanelRules(CouncilCase):
         document["panel"].append(
             {
                 "actor": "rev-4",
-                "model": "gpt-6-sol",
+                "model": "gpt-6.1-sol",
                 "reasoning_effort": "medium",
                 "role": "reviewer",
             }

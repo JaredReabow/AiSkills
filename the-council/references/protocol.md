@@ -20,10 +20,10 @@ were taken from. Without it the best available outcome is `EVIDENCE_NEEDED`,
 because unverified bytes are not acceptance.
 
 Resolve each seat against the live native subagent catalog before claiming it.
-`$the-council` alone means three Sol medium reviewers. Under
+`$the-council` alone means three Sol 6.1 medium reviewers. Under
 `$parallelism $the-council`, the reviewer already selected for the Parallelism
-task takes the lead seat and Sol medium fills the rest. An explicit list such as
-`sol medium, astra low, deepseek high` seats those actors in order; the first
+task takes the lead seat and Sol 6.1 medium fills the rest. An explicit list such as
+`sol medium, sol low, deepseek high` seats those actors in order; the first
 member leads unless the user names another member. If a route or effort is
 missing, report it and ask for a supported choice rather than substituting.
 
