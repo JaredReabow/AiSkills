@@ -123,3 +123,7 @@
   the rule to run only isolated checks while a peer owns an input.
 
 - Packaging cleanup: exclude generated Python bytecode and test caches.
+
+## 2026-10-29 — Council reasoning correction
+
+- Council seats use Astra medium or Sol 6.1 xhigh (very high), with three Sol 6.1-xhigh actors by default. Update metadata, examples, fixtures and the Parallelism-to-Council lead handoff so a medium Sol planner cannot retain a Council seat. Ordinary Parallelism keeps its Sol 6.1-medium default.

@@ -20,12 +20,16 @@ were taken from. Without it the best available outcome is `EVIDENCE_NEEDED`,
 because unverified bytes are not acceptance.
 
 Resolve each seat against the live native subagent catalog before claiming it.
-`$the-council` alone means three Sol 6.1 medium reviewers. Under
-`$parallelism $the-council`, the reviewer already selected for the Parallelism
-task takes the lead seat and Sol 6.1 medium fills the rest. An explicit list such as
-`sol medium, sol low, deepseek high` seats those actors in order; the first
-member leads unless the user names another member. If a route or effort is
-missing, report it and ask for a supported choice rather than substituting.
+Every Council seat uses Astra (`gpt-6-astra`) at `medium` or Sol 6.1
+(`gpt-6.1-sol`) at `xhigh`. "Very high" and "extra high" map to `xhigh`.
+`$the-council` alone means three separate Sol 6.1-xhigh actors. Under
+`$parallelism $the-council`, reuse the planner as lead only if its model/effort
+pair qualifies; otherwise hand off its evidence and findings to a qualifying
+lead as described in SKILL.md. Unspecified remaining seats use Sol 6.1-xhigh.
+An explicit list such as `sol xhigh, astra medium, sol xhigh` seats those actors
+in order; the first leads unless the user names another listed member. Unless
+the user explicitly changes Council policy, unsupported pairs require a supported
+choice. Missing routes or efforts are reported, never silently substituted.
 
 ## Reviewer brief
 

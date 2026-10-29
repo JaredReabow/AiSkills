@@ -43,15 +43,29 @@ their reasoning efforts. Verify each requested model and effort against the live
 native subagent catalog before claiming the seat exists. If a route is missing or
 rejected, say so and ask for a supported choice; never substitute silently.
 
-- Standalone `$the-council`: **three reviewers on Sol 6.1 (`gpt-6.1-sol`) at medium
-  reasoning** unless the user selects otherwise.
-- `$parallelism $the-council`: reuse the Parallelism reviewer already selected
-  for the task as the lead planner, and fill the remaining seats with Sol 6.1 at
-  medium reasoning. Parallelism keeps its current single-reviewer behaviour when
-  the Council is not requested.
-- `$parallelism $the-council sol medium, sol low, deepseek high`: an explicit
-  list. The first member is the lead planner unless the user names a different
-  member as lead.
+Council seats use one of these model and reasoning pairs:
+
+- **Astra (`gpt-6-astra`) at `medium` reasoning.**
+- **Sol 6.1 (`gpt-6.1-sol`) at `xhigh` reasoning.** "Very high" and "extra high"
+  mean `xhigh`, not `high` or `max`. The shorthand `sol` means Sol 6.1.
+
+Keep every seat on one of these pairs unless the user explicitly changes this
+Council policy. Do not silently lower reasoning or substitute another model.
+
+- Standalone `$the-council`: **three Sol 6.1 reviewers at `xhigh` reasoning** by
+  default. `$the-council astra medium, astra medium, astra medium` selects three
+  separate Astra-medium actors.
+- `$parallelism $the-council`: reuse the current planner as lead only when its
+  model and effort meet the Council policy. Otherwise hand off its evidence and
+  open findings to a new qualifying lead; preserve its selected model when it is
+  Astra or Sol 6.1 and use the required Council effort. If its model is outside
+  the allowed pairs, request a supported lead choice. Fill unspecified remaining
+  seats with Sol 6.1 at `xhigh`. Ordinary Parallelism keeps its own single-reviewer
+  defaults when the Council is not requested.
+- `$parallelism $the-council sol xhigh, astra medium, sol xhigh`: an explicit
+  mixed panel. The first member is lead unless the user names another listed
+  member. Reject an unsupported model/effort selection and request a supported
+  pair instead of silently changing it.
 
 Record the panel, the package fingerprint, and a `panel_generation` counter.
 Changing membership, or returning to single-reviewer mode, starts a new

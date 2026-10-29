@@ -159,19 +159,19 @@ def base_packet(artifacts: list | None = None) -> dict:
             {
                 "actor": "rev-lead",
                 "model": "gpt-6.1-sol",
-                "reasoning_effort": "medium",
+                "reasoning_effort": "xhigh",
                 "role": "lead",
             },
             {
                 "actor": "rev-2",
                 "model": "gpt-6.1-sol",
-                "reasoning_effort": "medium",
+                "reasoning_effort": "xhigh",
                 "role": "reviewer",
             },
             {
                 "actor": "rev-3",
                 "model": "gpt-6.1-sol",
-                "reasoning_effort": "medium",
+                "reasoning_effort": "xhigh",
                 "role": "reviewer",
             },
         ],
@@ -300,7 +300,7 @@ def single_reviewer_packet(artifacts: list | None = None) -> dict:
         {
             "actor": "rev-solo",
             "model": "gpt-6.1-sol",
-            "reasoning_effort": "medium",
+            "reasoning_effort": "xhigh",
             "role": "lead",
         }
     ]

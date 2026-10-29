@@ -41,9 +41,12 @@ In council mode, the following rules override only single-reviewer acceptance:
   implementation; they request checks or research through the main agent.
 - Use one lead planner, occupying **one of at most three council seats**. With
   an explicit council list, its first member is lead unless the user chooses
-  another listed member. With no list, the current Parallelism reviewer becomes
-  lead and two Sol 6.1-medium reviewers fill the remaining seats. At a fresh default
-  start all three are Sol 6.1 medium. If the user separately specifies incompatible
+  another listed member. Every Council seat uses Astra (`gpt-6-astra`) at
+  `medium` or Sol 6.1 (`gpt-6.1-sol`) at `xhigh` (very high) reasoning. Reuse the
+  current planner as lead only if its pair qualifies; otherwise follow the
+  Council skill's evidence handoff and qualifying-lead selection rules. Fill
+  unspecified remaining seats with Sol 6.1-xhigh; at a fresh default start all
+  three are Sol 6.1-xhigh. If the user separately specifies incompatible
   lead and panel selections, clarify rather than adding a fourth seat.
 - Text after `$parallelism` selects its lead planner; a comma-separated model
   and effort list after `$the-council` selects that panel. Linked mentions behave

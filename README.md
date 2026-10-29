@@ -119,15 +119,18 @@ it replaces single-person acceptance with a panel of one to three reviewers.
 | --- | --- |
 | `$parallelism` | One Sol 6.1-medium planner/reviewer, as before. |
 | `$parallelism sol low` | One Sol 6.1-low planner/reviewer, as before. |
-| `$parallelism $the-council` | Three Sol 6.1-medium reviewers at a fresh default start. |
-| `$parallelism $the-council sol medium, sol low, deepseek high` | Explicit panel; first member leads planning unless you choose another listed member. |
-| `$the-council sol medium, sol medium` | Standalone review with two distinct actors. It does not authorize implementation changes. |
+| `$parallelism $the-council` | Three Sol 6.1-xhigh reviewers at a fresh default start. |
+| `$parallelism $the-council sol xhigh, astra medium, sol xhigh` | Explicit panel; first member leads planning unless you choose another listed member. |
+| `$the-council sol xhigh, sol xhigh` | Standalone review with two distinct actors. It does not authorize implementation changes. |
 
 The main agent still owns workers, task state and the wake-up timer. One council
 member leads planning; there is no fourth lead reviewer. If you bring the council
 into existing Parallelism work without specifying its panel, the current reviewer
-becomes lead and two Sol 6.1-medium members join. Explicit lists select the whole
-panel. Model aliases are checked against the host's actual available routes.
+can remain lead only if it uses Astra medium or Sol 6.1-xhigh; otherwise an
+evidence handoff selects a qualifying lead. Unspecified remaining seats use
+Sol 6.1-xhigh. "Very high" maps to `xhigh`. Every seat must use one of those two
+pairs unless you explicitly change Council policy. Explicit lists select the
+whole panel, and routes are checked against the host's actual available models.
 
 Every member receives the same frozen task, requirements and artifact evidence.
 Their first reviews are independent. The main agent collates all findings,

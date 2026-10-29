@@ -249,6 +249,9 @@ Use `$parallelism $the-council` for collective acceptance during a build, or
 `$the-council` to review existing work. Supply one to three comma-separated
 model/effort entries after the Council mention to select its panel. Plain
 `$parallelism` and `$parallelism sol low` remain single-reviewer invocations.
+Council seats use Astra at `medium` or Sol 6.1 at `xhigh` (very high). The default
+Council is three separate Sol 6.1-xhigh reviewers; ordinary Parallelism remains
+Sol 6.1 medium. See the Council skill for lead handoffs and explicit panel choices.
 
 ### Validate the installation
 

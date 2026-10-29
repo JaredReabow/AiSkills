@@ -366,7 +366,7 @@ class PanelRules(CouncilCase):
             {
                 "actor": "rev-4",
                 "model": "gpt-6.1-sol",
-                "reasoning_effort": "medium",
+                "reasoning_effort": "xhigh",
                 "role": "reviewer",
             }
         )
